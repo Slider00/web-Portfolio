@@ -34,9 +34,8 @@ const Navbar = () => {
         <div className="flex items-center justify-between py-2 sm:py-0">
           <a
             href="/"
-            className="text-xl font-bold transition-colors text-neutral-400 hover:text-white"
-          >
-            Ali
+            className="text-xl font-bold transition-colors text-neutral-400 hover:text-white">
+            Julian Correa
           </a>
           <button
             onClick={() => setIsOpen(!isOpen)}
