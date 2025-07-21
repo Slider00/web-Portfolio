@@ -2,34 +2,43 @@ import { useState } from "react";
 import { motion } from "motion/react";
 function Navigation() {
   return (
-    <ul className="nav-ul">
-      <li className="nav-li">
-        <a className="nav-link" href="#home">
-          Home
-        </a>
-      </li>
-      <li className="nav-li">
-        <a className="nav-link" href="#about">
-          About
-        </a>
-      </li>
-      <li className="nav-li">
-        <a className="nav-link" href="#work">
-          Work
-        </a>
-      </li>
-      <li className="nav-li">
-        <a className="nav-link" href="#contact">
-          Contact
-        </a>
-      </li>
-    </ul>
+      <ul className="nav-ul">
+          <li className="nav-li">
+              <button
+                  onClick={() => window.location.href = `${import.meta.env.BASE_URL}coins.html`}
+              >
+                  Coins
+              </button>
+          </li>
+
+          <li className="nav-li">
+              <a className="nav-link" href="#home">
+                  Home
+              </a>
+          </li>
+          <li className="nav-li">
+              <a className="nav-link" href="#about">
+                  About
+              </a>
+          </li>
+          <li className="nav-li">
+              <a className="nav-link" href="#work">
+                  Work
+              </a>
+          </li>
+          <li className="nav-li">
+              <a className="nav-link" href="#contact">
+                  Contact
+              </a>
+          </li>
+      </ul>
   );
 }
+
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="fixed inset-x-0 z-20 w-full backdrop-blur-lg bg-primary/40">
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+        <div className="fixed inset-x-0 z-20 w-full backdrop-blur-lg bg-primary/40">
       <div className="mx-auto c-space max-w-7xl">
         <div className="flex items-center justify-between py-2 sm:py-0">
           <a
