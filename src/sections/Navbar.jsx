@@ -7,12 +7,12 @@ function Navigation() {
               <button
                   onClick={() => window.location.href = `${import.meta.env.BASE_URL}coins.html`}
               >
-                  Coins
+                  Cryptocurrency
               </button>
           </li>
 
           <li className="nav-li">
-              <a className="nav-link" href="#home">
+              <a className="nav-link" href="/">
                   Home
               </a>
           </li>
