@@ -25,12 +25,15 @@ function SearchBar({ onSearch }) {
             style={{ marginTop: "4rem" }}
         >
             <button
-                onClick={() => (window.location.href = "/")}
+                onClick={() =>
+                    (window.location.href = `${import.meta.env.BASE_URL}`)
+                }
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 transition"
                 aria-label="Volver al inicio"
             >
                 👈
             </button>
+
 
             <input
                 type="text"
