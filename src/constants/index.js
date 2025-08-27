@@ -124,9 +124,9 @@ export const experiences = [
     ],
   },
   {
-    title: "Back-End Developer",
+    title: "front-End Developer",
     job: "Car Manufacture",
-    date: "2023-2024",
+    date: "2020-2025",
     contents: [
       "Engineered systems for large-scale data ingestion...",
       "✅ Implemented secure APIs...",
