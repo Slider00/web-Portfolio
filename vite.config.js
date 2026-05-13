@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 
 export default defineConfig({
-  base: "/web-Portfolio/",
+  base: process.env.VERCEL ? "/" : "/web-Portfolio/",
   plugins: [react(), tailwindcss()],
   build: {
     rollupOptions: {
