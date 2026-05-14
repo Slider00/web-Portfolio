@@ -1,44 +1,68 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-function Navigation() {
+function Navigation({ onNavigate }) {
+  const [isCvOpen, setIsCvOpen] = useState(false);
+  const base = import.meta.env.BASE_URL;
+
+  const handleDownload = () => {
+    setIsCvOpen(false);
+    onNavigate?.();
+  };
+
   return (
       <ul className="nav-ul">
           <li className="nav-li">
               <button
-                  onClick={() => window.location.href = `${import.meta.env.BASE_URL}coins.html`}
+                  onClick={() => window.location.href = `${base}coins.html`}
               >
                   Cryptocurrency
               </button>
           </li>
 
           <li className="nav-li">
-              <a className="nav-link" href={`${import.meta.env.BASE_URL}`}>
+              <a className="nav-link" href={`${base}`} onClick={onNavigate}>
                   Home
               </a>
           </li>
           <li className="nav-li">
-              <a className="nav-link" href="#about">
+              <a className="nav-link" href="#about" onClick={onNavigate}>
                   About
               </a>
           </li>
           <li className="nav-li">
-              <a className="nav-link" href="#work">
+              <a className="nav-link" href="#work" onClick={onNavigate}>
                   Work
               </a>
           </li>
           <li className="nav-li">
-              <a className="nav-link" href="#contact">
+              <a className="nav-link" href="#contact" onClick={onNavigate}>
                   Contact
               </a>
           </li>
-          <li className="nav-li">
-              <a
-                  className="nav-link"
-                  href={`${import.meta.env.BASE_URL}models/cv.pdf`}
-                  download="Julian-Correa-CV.pdf"
-              >
-                  CV
-              </a>
+          <li className="relative nav-li">
+              <button className="nav-link" onClick={() => setIsCvOpen((v) => !v)}>
+                CV
+              </button>
+              {isCvOpen && (
+                <div className="z-30 p-2 mt-2 rounded-md shadow-lg sm:absolute sm:right-0 min-w-40 bg-midnight/95 ring-1 ring-white/10">
+                  <a
+                    className="block px-3 py-2 text-sm rounded-md text-neutral-200 hover:bg-white/10"
+                    href={`${base}models/cv.pdf`}
+                    download="Julian-Correa-CV-ES.pdf"
+                    onClick={handleDownload}
+                  >
+                    CV Español
+                  </a>
+                  <a
+                    className="block px-3 py-2 mt-1 text-sm rounded-md text-neutral-200 hover:bg-white/10"
+                    href={`${base}models/cv-en.pdf`}
+                    download="Julian-Correa-CV-EN.pdf"
+                    onClick={handleDownload}
+                  >
+                    CV English
+                  </a>
+                </div>
+              )}
           </li>
       </ul>
   );
@@ -64,7 +88,7 @@ const Navbar = () => {
                 />
             </button>
             <nav className="hidden sm:flex">
-                <Navigation/>
+                <Navigation />
             </nav>
         </div>
       </div>
@@ -77,7 +101,7 @@ const Navbar = () => {
           transition={{ duration: 1 }}
         >
           <nav className="pb-5">
-            <Navigation />
+            <Navigation onNavigate={() => setIsOpen(false)} />
           </nav>
         </motion.div>
       )}
