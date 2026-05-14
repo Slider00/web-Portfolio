@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { useMotionValue, useSpring } from "motion/react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -261,13 +260,6 @@ export function Astronaut(props) {
     }
   }, [actions, animations]);
 
-  const yPosition = useMotionValue(5);
-  const ySpring = useSpring(yPosition, { damping: 30 });
-
-  useEffect(() => {
-    ySpring.set(-1);
-  }, [ySpring]);
-
   useEffect(() => {
     return () => {
       if (styledMaterial && styledMaterial !== materials["AstronautFallingTexture.png"]) {
@@ -279,7 +271,14 @@ export function Astronaut(props) {
 
   useFrame(() => {
     if (!group.current) return;
-    group.current.position.y = ySpring.get();
+    const baseY = Array.isArray(props.position) ? props.position[1] : -1;
+    const bob = Math.sin(performance.now() * 0.0012) * 0.08;
+    const targetY = baseY + bob;
+    group.current.position.y = THREE.MathUtils.lerp(
+      group.current.position.y,
+      targetY,
+      0.08
+    );
   });
 
   return (

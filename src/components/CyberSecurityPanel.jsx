@@ -14,7 +14,7 @@ const levelColor = {
 
 export default function CyberSecurityPanel() {
   return (
-    <div className="relative w-full h-full p-5 overflow-hidden rounded-2xl">
+    <div className="relative w-full h-full p-4 md:p-5 overflow-hidden rounded-2xl">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(51,194,204,0.18),transparent_42%),radial-gradient(circle_at_82%_24%,rgba(122,87,219,0.18),transparent_46%)]" />
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:22px_22px]" />
 
@@ -30,10 +30,10 @@ export default function CyberSecurityPanel() {
         </div>
       </div>
 
-      <div className="relative z-10 mt-4 h-[78%]">
+      <div className="relative z-10 mt-3 md:mt-4 h-[80%]">
         <div className="absolute inset-0 rounded-xl border border-white/10 bg-primary/20 backdrop-blur-[2px]" />
 
-        <div className="absolute inset-x-4 top-4 h-28 rounded-lg border border-white/10 bg-black/20 overflow-hidden">
+        <div className="absolute inset-x-3 md:inset-x-4 top-3 md:top-4 h-24 md:h-28 rounded-lg border border-white/10 bg-black/20 overflow-hidden">
           <motion.div
             className="absolute inset-y-0 left-0 w-full bg-gradient-to-b from-aqua/20 via-transparent to-transparent"
             animate={{ y: ["-100%", "140%"] }}
@@ -51,11 +51,11 @@ export default function CyberSecurityPanel() {
           </div>
         </div>
 
-        <div className="absolute inset-x-4 bottom-4 space-y-2">
+        <div className="absolute inset-x-3 md:inset-x-4 bottom-3 md:bottom-4 space-y-1.5 md:space-y-2">
           {events.map((event, i) => (
             <motion.div
               key={event.label}
-              className="flex items-center justify-between px-3 py-2 text-xs rounded-md bg-white/8 ring-1 ring-white/12"
+              className="flex items-center justify-between px-2.5 md:px-3 py-1.5 md:py-2 text-[11px] md:text-xs rounded-md bg-white/8 ring-1 ring-white/12"
               initial={{ opacity: 0.55 }}
               animate={{ opacity: [0.55, 1, 0.55] }}
               transition={{ duration: 1.6 + i * 0.35, repeat: Infinity, ease: "easeInOut" }}
@@ -69,4 +69,3 @@ export default function CyberSecurityPanel() {
     </div>
   );
 }
-

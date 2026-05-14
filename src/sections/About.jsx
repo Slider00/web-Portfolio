@@ -9,8 +9,8 @@ const About = () => {
     <section className="c-space section-spacing" id="about">
       <h2 className="text-heading">About Me</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-[18rem] mt-12">
-        <div className="flex items-end grid-default-color grid-1">
-          <div className="absolute top-4 left-4 right-4 bottom-40 md:bottom-36">
+        <div className="flex items-end h-[30rem] md:h-full grid-default-color grid-1">
+          <div className="absolute top-4 left-4 right-4 bottom-44 md:bottom-36">
             <TerminalPreview />
           </div>
           <div className="z-10">
@@ -21,7 +21,7 @@ const About = () => {
           </div>
           <div className="absolute inset-x-0 pointer-evets-none -bottom-4 h-1/2 sm:h-1/3 bg-gradient-to-t from-indigo" />
         </div>
-        <div className="grid-default-color grid-2">
+        <div className="h-[22rem] md:h-full grid-default-color grid-2">
           <CyberSecurityPanel />
         </div>
         {/* Grid 3 */}
