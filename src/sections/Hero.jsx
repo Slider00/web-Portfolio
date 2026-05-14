@@ -18,15 +18,26 @@ const Hero = () => {
         className="absolute inset-0"
         style={{ width: "100vw", height: "100vh" }}
       >
-        <Canvas camera={{ position: [0, 1, 3] }}>
+        <Canvas
+          camera={{ position: [0, 1, 3] }}
+          dpr={isMobile ? [0.75, 1] : [1, 2]}
+          gl={{
+            antialias: !isMobile,
+            powerPreference: "high-performance",
+          }}
+        >
           <Suspense fallback={<Loader />}>
-            <Float>
+            <Float
+              speed={isMobile ? 0.5 : 1}
+              rotationIntensity={isMobile ? 0.12 : 0.3}
+              floatIntensity={isMobile ? 0.25 : 0.7}
+            >
               <Astronaut
                 scale={isMobile && 0.23}
                 position={isMobile && [0, -1.5, 0]}
               />
             </Float>
-            <Rig />
+            {!isMobile && <Rig />}
           </Suspense>
         </Canvas>
       </figure>
