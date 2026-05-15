@@ -20,9 +20,9 @@ const Hero = () => {
       >
         <Canvas
           camera={{ position: [0, 1, 3] }}
-          dpr={isMobile ? [1, 1.25] : [1, 2]}
+          dpr={isMobile ? [1, 1.25] : 2}
           gl={{
-            antialias: true,
+            antialias: !isMobile,
             powerPreference: "high-performance",
           }}
         >

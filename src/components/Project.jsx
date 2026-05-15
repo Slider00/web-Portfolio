@@ -7,6 +7,7 @@ const Project = ({
   subDescription,
   href,
   image,
+  images,
   tags,
   setPreview,
 }) => {
@@ -41,6 +42,7 @@ const Project = ({
           description={description}
           subDescription={subDescription}
           image={image}
+          images={images}
           tags={tags}
           href={href}
           closeModal={() => setIsHidden(false)}

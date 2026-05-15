@@ -105,6 +105,75 @@ export const myProjects = [
       { id: 4, name: "TailwindCSS", path: `${base}assets/logos/tailwindcss.svg` },
     ],
   },
+  {
+    id: 7,
+    title: "Flutter Mobile App",
+    description: "Cross-platform app focused on fast UX and clean architecture.",
+    subDescription: [
+      "Built with Flutter and Dart using reusable widgets and state-driven UI flows.",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/flutter-1.png`,
+    images: [
+      `${base}assets/projects/flutter-1.png`,
+      `${base}assets/projects/flutter-2.png`,
+      `${base}assets/projects/flutter-3.png`,
+      `${base}assets/projects/flutter-4.png`,
+      `${base}assets/projects/flutter-5.png`,
+      `${base}assets/projects/flutter-6.png`,
+      `${base}assets/projects/flutter-7.png`,
+      `${base}assets/projects/flutter-8.png`,
+      `${base}assets/projects/flutter-9.png`,
+      `${base}assets/projects/flutter-10.png`,
+      `${base}assets/projects/flutter-11.png`,
+      `${base}assets/projects/flutter-12.png`,
+      `${base}assets/projects/flutter-13.png`,
+      `${base}assets/projects/flutter-14.png`,
+      `${base}assets/projects/flutter-15.png`,
+      `${base}assets/projects/flutter-16.png`,
+      `${base}assets/projects/flutter-17.png`,
+    ],
+    tags: [
+      { id: 1, name: "Flutter", path: `${base}assets/logos/flutter.svg` },
+      { id: 2, name: "Dart", path: `${base}assets/logos/flutter.svg` },
+    ],
+  },
+  {
+    id: 8,
+    title: "React + Vite Web Platform",
+    description: "Modern web platform optimized for performance and scalability.",
+    subDescription: [
+      "Implemented modular components, responsive layouts, and fast builds with Vite.",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/react-vite-1.png`,
+    images: [
+      `${base}assets/projects/react-vite-1.png`,
+      `${base}assets/projects/react-vite-2.png`,
+      `${base}assets/projects/react-vite-3.png`,
+    ],
+    tags: [
+      { id: 1, name: "React", path: `${base}assets/logos/react.svg` },
+      { id: 2, name: "Vite", path: `${base}assets/logos/vitejs.svg` },
+    ],
+  },
+  {
+    id: 9,
+    title: "Sistema POS tipo SaaS",
+    description: "Backend-oriented system for secure data management workflows.",
+    subDescription: [
+      "Developed PHP services and relational data structures for business operations.",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/php-dashboard.png`,
+    tags: [
+      { id: 1, name: "PHP", path: `${base}assets/logos/php.svg` },
+      { id: 2, name: "MySQL", path: `${base}assets/logos/sqlite.svg` },
+    ],
+  },
 ];
 
 export const mySocials = [

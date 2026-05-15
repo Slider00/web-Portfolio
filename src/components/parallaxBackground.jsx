@@ -1,13 +1,15 @@
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 const ParallaxBackground = () => {
+    const isMobile = useMediaQuery({ maxWidth: 853 });
     const [backgroundReady, setBackgroundReady] = useState(false);
     const { scrollYProgress } = useScroll();
     const x = useSpring(scrollYProgress, { damping: 50 });
-    const mountain3Y = useTransform(x, [0, 0.5], ["0%", "70%"]);
-    const planetsX = useTransform(x, [0, 0.5], ["0%", "-20%"]);
-    const mountain2Y = useTransform(x, [0, 0.5], ["0%", "30%"]);
+    const mountain3Y = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "70%"]);
+    const planetsX = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "-20%"]);
+    const mountain2Y = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "30%"]);
     const mountain1Y = useTransform(x, [0, 0.5], ["0%", "0%"]);
 
     // Base path for static assets (adapta según el base de Vite)
@@ -43,11 +45,11 @@ const ParallaxBackground = () => {
 
     const stars = useMemo(
       () =>
-        Array.from({ length: 85 }, (_, i) => {
+        Array.from({ length: isMobile ? 36 : 85 }, (_, i) => {
           const seed = i * 9973;
           const left = (seed * 17) % 100;
           const top = (seed * 29) % 48;
-          const size = 12;
+          const size = isMobile ? 8 : 12;
           const duration = 2.2 + ((seed * 7) % 23) / 10;
           const delay = -((seed * 19) % 40) / 10;
           const opacity = 0.35 + ((seed * 11) % 45) / 100;
