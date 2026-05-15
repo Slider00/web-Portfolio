@@ -26,13 +26,13 @@ const About = () => {
         </div>
         {/* Grid 3 */}
         <div className="grid-black-color grid-3">
-          <div className="z-10 w-[50%]">
+          <div className="z-10 w-[65%] sm:w-[50%]">
             <p className="headtext">Time Zone</p>
             <p className="subtext">
               I'm based in Mars, and open to remote work worldwide
             </p>
           </div>
-          <figure className="absolute left-[30%] top-[10%]">
+          <figure className="absolute pointer-events-none -right-10 -bottom-16 sm:bottom-[-4.5rem] sm:right-[-3rem] md:left-[30%] md:top-[10%]">
             <Globe />
           </figure>
         </div>

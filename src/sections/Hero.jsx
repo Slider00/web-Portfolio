@@ -5,11 +5,18 @@ import { Astronaut } from "../components/Astronaut";
 import { Float } from "@react-three/drei";
 import { useMediaQuery } from "react-responsive";
 import { easing } from "maath";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import Loader from "../components/Loader";
 
 const Hero = () => {
   const isMobile = useMediaQuery({ maxWidth: 853 });
+  const isLowEndDevice = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    const memory = navigator.deviceMemory || 8;
+    const cores = navigator.hardwareConcurrency || 8;
+    return memory <= 4 || cores <= 4;
+  }, []);
+  const mobileDpr = isLowEndDevice ? [1, 1.25] : [1.5, 2];
   return (
     <section className="flex items-start justify-center min-h-screen overflow-hidden md:items-start md:justify-start c-space">
       <HeroText />
@@ -20,9 +27,9 @@ const Hero = () => {
       >
         <Canvas
           camera={{ position: [0, 1, 3] }}
-          dpr={isMobile ? [1, 1.25] : 2}
+          dpr={isMobile ? mobileDpr : 2}
           gl={{
-            antialias: !isMobile,
+            antialias: true,
             powerPreference: "high-performance",
           }}
         >
