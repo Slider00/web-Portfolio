@@ -1,85 +1,43 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 export const FlipWords = ({ words, duration = 3000, className }) => {
-  const [currentWord, setCurrentWord] = useState(words[0]);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // thanks for the fix Julian - https://github.com/Julian-AT
-  const startAnimation = useCallback(() => {
-    const word = words[words.indexOf(currentWord) + 1] || words[0];
-    setCurrentWord(word);
-    setIsAnimating(true);
-  }, [currentWord, words]);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (!isAnimating)
-      setTimeout(() => {
-        startAnimation();
-      }, duration);
-  }, [isAnimating, duration, startAnimation]);
+    if (!words?.length || words.length < 2) return;
+
+    const timer = window.setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, duration);
+
+    return () => window.clearInterval(timer);
+  }, [duration, words]);
+
+  const currentWord = words?.[index] ?? "";
 
   return (
-    <AnimatePresence
-      onExitComplete={() => {
-        setIsAnimating(false);
-      }}
-    >
+    <AnimatePresence mode="wait">
       <motion.div
-        initial={{
-          opacity: 0,
-          y: 10,
-        }}
+        initial={{ opacity: 1, y: 0 }}
         animate={{
           opacity: 1,
           y: 0,
         }}
         transition={{
-          type: "spring",
-          stiffness: 100,
-          damping: 10,
+          duration: 0.25,
+          ease: "easeOut",
         }}
         exit={{
           opacity: 0,
-          y: -40,
-          x: 40,
-          filter: "blur(8px)",
-          scale: 2,
+          y: -8,
           position: "absolute",
         }}
         className={twMerge("z-10 inline-block relative text-left", className)}
-        key={currentWord}
+        key={`${currentWord}-${index}`}
       >
-        {/* edit suggested by Sajal: https://x.com/DewanganSajal */}
-        {currentWord.split(" ").map((word, wordIndex) => (
-          <motion.span
-            key={word + wordIndex}
-            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              delay: wordIndex * 0.3,
-              duration: 0.3,
-            }}
-            className="inline-block whitespace-nowrap"
-          >
-            {word.split("").map((letter, letterIndex) => (
-              <motion.span
-                key={word + letterIndex}
-                initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                transition={{
-                  delay: wordIndex * 0.3 + letterIndex * 0.05,
-                  duration: 0.2,
-                }}
-                className="inline-block"
-              >
-                {letter}
-              </motion.span>
-            ))}
-            <span className="inline-block">&nbsp;</span>
-          </motion.span>
-        ))}
+        <span className="inline-block whitespace-nowrap">{currentWord}</span>
       </motion.div>
     </AnimatePresence>
   );

@@ -4,11 +4,12 @@ import { useMediaQuery } from "react-responsive";
 
 const ParallaxBackground = () => {
     const isMobile = useMediaQuery({ maxWidth: 853 });
+    const enableParallax = !isMobile;
     const { scrollYProgress } = useScroll();
     const x = useSpring(scrollYProgress, { damping: 50 });
-    const mountain3Y = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "70%"]);
-    const planetsX = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "-20%"]);
-    const mountain2Y = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "30%"]);
+    const mountain3Y = useTransform(x, [0, 0.5], ["0%", "70%"]);
+    const planetsX = useTransform(x, [0, 0.5], ["0%", "-20%"]);
+    const mountain2Y = useTransform(x, [0, 0.5], ["0%", "30%"]);
     const mountain1Y = useTransform(x, [0, 0.5], ["0%", "0%"]);
 
     const base = import.meta.env.BASE_URL;
@@ -64,7 +65,7 @@ const ParallaxBackground = () => {
                         backgroundImage: `url(${base}assets/mountain-3.png)`,
                         backgroundPosition: "bottom",
                         backgroundSize: "cover",
-                        y: mountain3Y,
+                        y: enableParallax ? mountain3Y : "0%",
                     }}
                 />
                 {/* Planets */}
@@ -74,7 +75,7 @@ const ParallaxBackground = () => {
                         backgroundImage: `url(${base}assets/planets.png)`,
                         backgroundPosition: "bottom",
                         backgroundSize: "cover",
-                        x: planetsX,
+                        x: enableParallax ? planetsX : "0%",
                     }}
                 />
                 {/* Mountain Layer 2 */}
@@ -84,7 +85,7 @@ const ParallaxBackground = () => {
                         backgroundImage: `url(${base}assets/mountain-2.png)`,
                         backgroundPosition: "bottom",
                         backgroundSize: "cover",
-                        y: mountain2Y,
+                        y: enableParallax ? mountain2Y : "0%",
                     }}
                 />
                 {/* Mountain Layer 1 */}
