@@ -184,29 +184,27 @@ export const mySocials = [
 
 export const experiences = [
   {
-    title: "Software Developer",
-    job: "Security & Defense Projects",
-    date: "2021-2023",
-    contents: [
-      "Enhanced application security...",
-      "Designed and implemented map interfaces...",
-    ],
-  },
-  {
-    title: "front-End Developer",
-    job: "Car Manufacture",
+    title: "Front End Developer (Web & Mobile App)",
+    job: "Innventa software y technology",
     date: "2020-2025",
     contents: [
-      "Engineered systems for large-scale data ingestion...",
-      "✅ Implemented secure APIs...",
+      "Built front-end interfaces for web and mobile applications with a strong focus on scalable architecture, maintainability, and user experience.",
+      "Implemented reusable component systems and responsive layouts across multiple devices and screen resolutions.",
+      "Integrated REST APIs, handled complex state management, and implemented form validation for business-critical workflows.",
+      "Applied performance best practices (lazy loading, render optimization, bundle reduction) and accessibility standards.",
+      "Collaborated closely with design, backend, and QA teams under agile methodologies to deliver high-impact releases continuously.",
     ],
   },
   {
-    title: "Freelance Developer",
-    job: "Self-Employed",
-    date: "2025-Present",
+    title: "Senior Front End Developer (Web & Mobile App)",
+    job: "Bety (Professional Services)",
+    date: "2025-2026",
     contents: [
-      "Created a personal portfolio using Three.js...",
+      "Led the web and mobile front-end domain, defining code standards, project structure, and consistent UI guidelines.",
+      "Designed and evolved SaaS product interfaces, improving usability, conversion, and navigation flow.",
+      "Delivered advanced performance optimizations for mobile and desktop (3D rendering, interactions, scrolling, and critical asset loading).",
+      "Provided technical mentorship to the front-end team in architecture, debugging, code quality, and development best practices.",
+      "Coordinated strategically with product, design, and business stakeholders to prioritize features, reduce technical debt, and accelerate releases.",
     ],
   },
 ];
