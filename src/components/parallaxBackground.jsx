@@ -1,10 +1,9 @@
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
 
 const ParallaxBackground = () => {
     const isMobile = useMediaQuery({ maxWidth: 853 });
-    const [backgroundReady, setBackgroundReady] = useState(false);
     const { scrollYProgress } = useScroll();
     const x = useSpring(scrollYProgress, { damping: 50 });
     const mountain3Y = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "70%"]);
@@ -12,36 +11,7 @@ const ParallaxBackground = () => {
     const mountain2Y = useTransform(x, [0, 0.5], ["0%", isMobile ? "0%" : "30%"]);
     const mountain1Y = useTransform(x, [0, 0.5], ["0%", "0%"]);
 
-    // Base path for static assets (adapta según el base de Vite)
     const base = import.meta.env.BASE_URL;
-    useEffect(() => {
-      let cancelled = false;
-      const urls = [
-        `${base}assets/sky.jpg`,
-        `${base}assets/mountain-3.png`,
-        `${base}assets/planets.png`,
-        `${base}assets/mountain-2.png`,
-        `${base}assets/mountain-1.png`,
-      ];
-
-      Promise.all(
-        urls.map(
-          (url) =>
-            new Promise((resolve) => {
-              const img = new Image();
-              img.onload = resolve;
-              img.onerror = resolve;
-              img.src = url;
-            })
-        )
-      ).then(() => {
-        if (!cancelled) setBackgroundReady(true);
-      });
-
-      return () => {
-        cancelled = true;
-      };
-    }, [base]);
 
     const stars = useMemo(
       () =>
@@ -55,7 +25,7 @@ const ParallaxBackground = () => {
           const opacity = 0.35 + ((seed * 11) % 45) / 100;
           return { left, top, size, duration, delay, opacity };
         }),
-      []
+      [isMobile]
     );
 
     return (
@@ -70,25 +40,23 @@ const ParallaxBackground = () => {
                         backgroundSize: "cover",
                     }}
                 />
-                {backgroundReady && (
-                  <div className="absolute inset-0 pointer-events-none" style={{ zIndex: -45 }}>
-                    {stars.map((star, index) => (
-                      <span
-                        key={index}
-                        className="twinkle-star"
-                        style={{
-                          left: `${star.left}%`,
-                          top: `${star.top}%`,
-                          width: `${star.size}px`,
-                          height: `${star.size}px`,
-                          opacity: star.opacity,
-                          animationDuration: `${star.duration}s`,
-                          animationDelay: `${star.delay}s`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
+                <div className="absolute inset-0 pointer-events-none" style={{ zIndex: -45 }}>
+                  {stars.map((star, index) => (
+                    <span
+                      key={index}
+                      className="twinkle-star"
+                      style={{
+                        left: `${star.left}%`,
+                        top: `${star.top}%`,
+                        width: `${star.size}px`,
+                        height: `${star.size}px`,
+                        opacity: star.opacity,
+                        animationDuration: `${star.duration}s`,
+                        animationDelay: `${star.delay}s`,
+                      }}
+                    />
+                  ))}
+                </div>
                 {/* Mountain Layer 3 */}
                 <motion.div
                     className="absolute inset-0 -z-40"
