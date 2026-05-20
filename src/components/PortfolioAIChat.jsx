@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { askPortfolioAI } from "../lib/portfolioAi";
 
 const WELCOME =
@@ -42,26 +42,21 @@ const PortfolioAIChat = () => {
   ]);
   const scrollRef = useRef(null);
 
-  const chatHistory = useMemo(
-    () =>
-      messages
-        .filter((m) => m.role === "user" || m.role === "assistant")
-        .map((m) => ({ role: m.role, content: m.content })),
-    [messages]
-  );
-
   const handleSend = async (presetMessage) => {
     const message = (presetMessage ?? input).trim();
     if (!message || loading) return;
 
     const nextMessages = [...messages, { role: "user", content: message }];
+    const nextHistory = nextMessages
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({ role: m.role, content: m.content }));
     setMessages(nextMessages);
     if (!presetMessage) setInput("");
     setError("");
     setLoading(true);
 
     try {
-      const data = await askPortfolioAI(message, chatHistory);
+      const data = await askPortfolioAI(message, nextHistory);
       const reply =
         data?.reply ||
         "I could not generate a response right now. Please try again.";
