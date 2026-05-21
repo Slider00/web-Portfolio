@@ -319,7 +319,7 @@ const PortfolioAIChat = () => {
                 }}
                 rows={2}
                 placeholder="Ask about Julian's projects, stack, or experience..."
-                className="w-full px-3 py-2 text-sm text-white rounded-lg resize-none bg-white/10 field-input-focus placeholder:text-neutral-400"
+                className="w-full px-3 py-2 text-base text-white rounded-lg resize-none bg-white/10 md:text-sm field-input-focus placeholder:text-neutral-400"
               />
               <button
                 type="button"
