@@ -4,6 +4,12 @@ import { askPortfolioAI } from "../lib/portfolioAi";
 const WELCOME =
   "Hi, I'm Julian's AI assistant. Ask me about projects, experience, stack, or availability.";
 
+const CONTACT_LINKS = {
+  whatsapp: import.meta.env.VITE_WHATSAPP_URL || "",
+  linkedin: import.meta.env.VITE_LINKEDIN_URL || "",
+  github: import.meta.env.VITE_GITHUB_URL || "https://github.com/Slider00",
+};
+
 const isContactIntent = (text) => {
   const value = (text || "").toLowerCase();
   const patterns = [
@@ -28,8 +34,15 @@ const detectContactChannelIntent = (text) => {
   const wantsWhatsApp = value.includes("whatsapp") || value.includes("whats");
   const wantsGitHub = value.includes("github");
   const wantsLinkedIn = value.includes("linkedin") || value.includes("linked in");
+  const wantsGenericContact =
+    value.includes("contact") ||
+    value.includes("contacto") ||
+    value.includes("contáct") ||
+    value.includes("reach out") ||
+    value.includes("reach you") ||
+    value.includes("how can i contact");
 
-  return { wantsWhatsApp, wantsGitHub, wantsLinkedIn };
+  return { wantsWhatsApp, wantsGitHub, wantsLinkedIn, wantsGenericContact };
 };
 
 const PortfolioAIChat = () => {
@@ -110,6 +123,60 @@ const PortfolioAIChat = () => {
               url.includes("linkedin.com");
             return !isContactAction;
           });
+
+      const hasWhatsAppAction = filteredActions.some((action) =>
+        action.label.toLowerCase().includes("whatsapp")
+      );
+      const hasLinkedInAction = filteredActions.some(
+        (action) =>
+          action.label.toLowerCase().includes("linkedin") ||
+          action.url.toLowerCase().includes("linkedin.com")
+      );
+      const hasGitHubAction = filteredActions.some(
+        (action) =>
+          action.label.toLowerCase().includes("github") ||
+          action.url.toLowerCase().includes("github.com")
+      );
+
+      const fallbackContactActions = [];
+      if (
+        contactIntent &&
+        (channelIntent.wantsWhatsApp || channelIntent.wantsGenericContact) &&
+        !hasWhatsAppAction &&
+        CONTACT_LINKS.whatsapp
+      ) {
+        fallbackContactActions.push({
+          type: "link",
+          label: "WhatsApp",
+          url: CONTACT_LINKS.whatsapp,
+        });
+      }
+      if (
+        contactIntent &&
+        channelIntent.wantsLinkedIn &&
+        !hasLinkedInAction &&
+        CONTACT_LINKS.linkedin
+      ) {
+        fallbackContactActions.push({
+          type: "link",
+          label: "LinkedIn",
+          url: CONTACT_LINKS.linkedin,
+        });
+      }
+      if (
+        contactIntent &&
+        channelIntent.wantsGitHub &&
+        !hasGitHubAction &&
+        CONTACT_LINKS.github
+      ) {
+        fallbackContactActions.push({
+          type: "link",
+          label: "GitHub",
+          url: CONTACT_LINKS.github,
+        });
+      }
+
+      const finalActions = [...filteredActions, ...fallbackContactActions];
       setMessages((prev) => [
         ...prev,
         {
@@ -117,7 +184,7 @@ const PortfolioAIChat = () => {
           content: reply,
           contact,
           suggestions,
-          actions: filteredActions,
+          actions: finalActions,
         },
       ]);
     } catch (err) {
