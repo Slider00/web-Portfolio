@@ -79,9 +79,8 @@ const PortfolioAIChat = () => {
               typeof action?.url === "string"
           )
         : [];
-      const filteredActions = !contactIntent
-        ? actions
-        : actions.filter((action) => {
+      const filteredActions = contactIntent
+        ? actions.filter((action) => {
             const label = action.label.toLowerCase();
             const url = action.url.toLowerCase();
             const isWhatsAppAction =
@@ -97,6 +96,19 @@ const PortfolioAIChat = () => {
             if (isGitHubAction) return channelIntent.wantsGitHub;
             if (isLinkedInAction) return channelIntent.wantsLinkedIn;
             return true;
+          })
+        : actions.filter((action) => {
+            const label = action.label.toLowerCase();
+            const url = action.url.toLowerCase();
+            const isContactAction =
+              label.includes("whatsapp") ||
+              label.includes("github") ||
+              label.includes("linkedin") ||
+              url.includes("wa.me") ||
+              url.includes("whatsapp") ||
+              url.includes("github.com") ||
+              url.includes("linkedin.com");
+            return !isContactAction;
           });
       setMessages((prev) => [
         ...prev,
@@ -245,7 +257,7 @@ const PortfolioAIChat = () => {
               <button
                 type="button"
                 disabled={loading}
-                onClick={handleSend}
+                onClick={() => handleSend()}
                 className="px-3 py-2 text-sm font-semibold text-white rounded-lg bg-lavender disabled:opacity-60"
               >
                 Send
