@@ -161,7 +161,7 @@ export const myProjects = [
   },
   {
     id: 9,
-    title: "Sistema POS tipo SaaS",
+    title: "SaaS-based POS System",
     description: "Backend-oriented system for secure data management workflows.",
     subDescription: [
       "Developed PHP services and relational data structures for business operations.",
