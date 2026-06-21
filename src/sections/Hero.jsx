@@ -40,8 +40,8 @@ const Hero = () => {
               floatIntensity={isMobile ? 0.25 : 0.7}
             >
               <Astronaut
-                scale={isMobile && 0.23}
-                position={isMobile && [0, -1.5, 0]}
+                scale={isMobile ? 0.23 : 0.3}
+                position={isMobile ? [0, -1.5, 0] : [1.3, -1, 0]}
               />
             </Float>
             {!isMobile && <Rig />}

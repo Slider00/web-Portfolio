@@ -3,12 +3,7 @@ import CoinRow from "./CoinRow";
 
 const titles = ['#', 'Coin', 'Price', '24h Price Change', '24h Volume', '24h 📊'];
 
-const TableCoins = ({ coins, search }) => {
-    const filteredCoins = coins.filter((coin) =>
-        coin.name.toLowerCase().includes(search.toLowerCase()) ||
-        coin.symbol.toLowerCase().includes(search.toLowerCase())
-    );
-
+const TableCoins = ({ coins }) => {
     return (
         <div className="w-full overflow-x-auto rounded-lg border border-gray-800 shadow-lg bg-gray-950">
             <table className="w-full min-w-[600px] text-left border-collapse">
@@ -25,7 +20,7 @@ const TableCoins = ({ coins, search }) => {
                 </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
-                {filteredCoins.map((coin, index) => (
+                {coins.map((coin, index) => (
                     <CoinRow key={coin.id || index} coin={coin} index={index} />
                 ))}
                 </tbody>

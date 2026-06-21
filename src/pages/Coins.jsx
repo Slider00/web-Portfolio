@@ -60,10 +60,41 @@ function CoinsPage() {
         setError(null);
 
         try {
-            // Obtener total solo una vez
+            // Obtener total solo una vez, con caché en localStorage para optimizar rendimiento de red
             if (page === 1 && totalCoins === 0) {
-                const listRes = await axios.get("https://api.coingecko.com/api/v3/coins/list");
-                setTotalCoins(listRes.data.length);
+                let cachedTotal = null;
+                try {
+                    const cachedVal = localStorage.getItem("coingecko_total_coins");
+                    const cachedTime = localStorage.getItem("coingecko_total_coins_time");
+                    if (cachedVal && cachedTime) {
+                        const age = Date.now() - parseInt(cachedTime, 10);
+                        if (age < 24 * 60 * 60 * 1000) { // 24 horas
+                            cachedTotal = parseInt(cachedVal, 10);
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Storage access failed:", e);
+                }
+
+                if (cachedTotal) {
+                    setTotalCoins(cachedTotal);
+                } else {
+                    try {
+                        const listRes = await axios.get("https://api.coingecko.com/api/v3/coins/list");
+                        const count = listRes.data.length;
+                        setTotalCoins(count);
+                        try {
+                            localStorage.setItem("coingecko_total_coins", count.toString());
+                            localStorage.setItem("coingecko_total_coins_time", Date.now().toString());
+                        } catch (e) {
+                            console.warn("Writing to storage failed:", e);
+                        }
+                    } catch (apiErr) {
+                        console.error("Failed to fetch list length:", apiErr);
+                        // Fallback a un número estimado razonable si falla la API
+                        setTotalCoins(5000);
+                    }
+                }
             }
 
             // Obtener datos de mercado
@@ -80,7 +111,11 @@ function CoinsPage() {
             setCoins(marketRes.data);
         } catch (err) {
             console.error("Error fetching coins:", err);
-            setError("Failed to load coins. Please try again later.");
+            if (err.response && err.response.status === 429) {
+                setError("Too many requests. CoinGecko API is rate-limited. Please wait a minute and try again.");
+            } else {
+                setError("Failed to load coins. Please try again later.");
+            }
         } finally {
             setLoading(false);
         }
@@ -111,7 +146,7 @@ function CoinsPage() {
             {loading && <p className="text-center text-gray-400">Loading...</p>}
             {error && <p className="text-center text-red-400">{error}</p>}
 
-            {!loading && !error && <TableCoins coins={filteredCoins} search={search} />}
+            {!loading && !error && <TableCoins coins={filteredCoins} />}
 
             {!loading && !error && totalPages > 1 && (
                 <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />

@@ -5,6 +5,7 @@ import About from "./sections/About";
 import Projects from "./sections/Projects";
 import Experiences from "./sections/Experiences";
 import Testimonial from "./sections/Testimonial";
+import RecruiterHub from "./sections/RecruiterHub";
 import Contact from "./sections/Contact";
 import Footer from './sections/Footer';
 import PortfolioAIChat from "./components/PortfolioAIChat";
@@ -18,6 +19,7 @@ const App = () => {
       <Projects />
       <Experiences />
       <Testimonial />
+      <RecruiterHub />
       <Contact />
       <Footer/>
       <PortfolioAIChat />
