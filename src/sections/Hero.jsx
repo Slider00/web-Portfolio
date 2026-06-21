@@ -22,7 +22,7 @@ const Hero = () => {
       <HeroText />
       <ParallaxBackground />
       <figure
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none md:pointer-events-auto"
         style={{ width: "100vw", height: "100vh" }}
       >
         <Canvas

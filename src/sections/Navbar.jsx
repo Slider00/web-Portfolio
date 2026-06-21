@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, useScroll, useSpring } from "motion/react";
 function Navigation({ onNavigate }) {
   const [isCvOpen, setIsCvOpen] = useState(false);
   const base = import.meta.env.BASE_URL;
@@ -75,8 +75,19 @@ function Navigation({ onNavigate }) {
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
     return (
         <div className="fixed inset-x-0 z-20 w-full backdrop-blur-lg bg-primary/40">
+            <motion.div
+                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-aqua via-lavender to-fuchsia origin-[0%]"
+                style={{ scaleX }}
+            />
             <div className="mx-auto c-space max-w-7xl">
         <div className="flex items-center justify-between py-2 sm:py-0">
             <a className="text-xl font-bold transition-colors text-neutral-400 hover:text-white" href={`${import.meta.env.BASE_URL}`}>
