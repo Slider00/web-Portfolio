@@ -1,7 +1,7 @@
 const ENV_API_URL = import.meta.env.VITE_AI_API_URL;
 const isDev = import.meta.env.DEV;
 const API_URL = ENV_API_URL || (isDev ? "http://localhost:4000" : "");
-const REQUEST_TIMEOUT_MS = 15000;
+const REQUEST_TIMEOUT_MS = 30000;
 
 function normalizeChatResponse(payload) {
   const body = payload?.data && typeof payload.data === "object" ? payload.data : payload;
