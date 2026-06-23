@@ -40,6 +40,11 @@ function Navigation({ onNavigate }) {
               </a>
           </li>
           <li className="nav-li">
+              <a className="nav-link" href="#testimonials" onClick={onNavigate}>
+                  Testimonials
+              </a>
+          </li>
+          <li className="nav-li">
               <a className="nav-link" href="#contact" onClick={onNavigate}>
                   Contact
               </a>

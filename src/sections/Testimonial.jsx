@@ -122,7 +122,7 @@ export default function Testimonial() {
   };
 
   return (
-    <div className="items-start mt-25 md:mt-35 c-space">
+    <div className="items-start mt-25 md:mt-35 c-space" id="testimonials">
       <h2 className="text-heading">Hear From My Clients</h2>
       
       {/* Carruseles Animados */}
