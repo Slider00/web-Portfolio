@@ -9,14 +9,6 @@ function Navigation({ onNavigate }) {
   return (
       <ul className="nav-ul">
           <li className="nav-li">
-              <button
-                  onClick={() => window.location.href = `${base}coins.html`}
-              >
-                  {t('nav.cryptocurrency')}
-              </button>
-          </li>
-
-          <li className="nav-li">
               <a className="nav-link" href={`${base}`} onClick={onNavigate}>
                   {t('nav.home')}
               </a>

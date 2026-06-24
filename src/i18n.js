@@ -10,7 +10,6 @@ const resources = {
   en: {
     translation: {
       nav: {
-        cryptocurrency: "Cryptocurrency",
         home: "Home",
         about: "About",
         work: "Work",
@@ -222,20 +221,12 @@ const resources = {
         placeholder: "Ask about Julian's projects, stack, or experience...",
         send: "Send",
         thinking: "Thinking..."
-      },
-      coins: {
-        searchPlaceholder: "Search by coins 🔎",
-        backTooltip: "Back to Home",
-        pageOf: "Page {{current}} of {{total}}",
-        prev: "Prev",
-        next: "Next"
       }
     }
   },
   es: {
     translation: {
       nav: {
-        cryptocurrency: "Criptomonedas",
         home: "Inicio",
         about: "Sobre Mí",
         work: "Experiencia",
@@ -447,13 +438,6 @@ const resources = {
         placeholder: "Pregunta sobre los proyectos, stack o experiencia de Julián...",
         send: "Enviar",
         thinking: "Pensando..."
-      },
-      coins: {
-        searchPlaceholder: "Buscar criptomonedas 🔎",
-        backTooltip: "Volver al inicio",
-        pageOf: "Página {{current}} de {{total}}",
-        prev: "Anterior",
-        next: "Siguiente"
       }
     }
   }
