@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { askPortfolioAI } from "../lib/portfolioAi";
-
-const WELCOME =
-  "Hi, I'm Julian's AI assistant. Ask me about projects, experience, stack, or availability.";
 
 const CONTACT_LINKS = {
   whatsapp: import.meta.env.VITE_WHATSAPP_URL || "",
@@ -46,12 +44,14 @@ const detectContactChannelIntent = (text) => {
 };
 
 const PortfolioAIChat = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [messages, setMessages] = useState([
-    { role: "assistant", content: WELCOME },
+  
+  const [messages, setMessages] = useState(() => [
+    { role: "assistant", content: t("aiChat.welcome") },
   ]);
   const scrollRef = useRef(null);
 
@@ -188,13 +188,12 @@ const PortfolioAIChat = () => {
         },
       ]);
     } catch (err) {
-      setError("Connection issue with AI backend. Please try again.");
+      setError(t("aiChat.errorConn"));
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content:
-            "I cannot reach the AI service right now. Please retry in a moment.",
+          content: t("aiChat.errorReach"),
         },
       ]);
       console.error(err);
@@ -224,7 +223,7 @@ const PortfolioAIChat = () => {
           decoding="async"
         />
         <span className="absolute px-2 py-0.5 text-[10px] font-bold tracking-wide text-white rounded-full border right-1.5 bottom-1.5 bg-black/65 border-white/30">
-          IA
+          {t("aiChat.badge")}
         </span>
       </button>
 
@@ -263,7 +262,7 @@ const PortfolioAIChat = () => {
                     rel="noreferrer"
                     className="inline-flex mt-2 rounded-lg bg-[#25D366] px-2.5 py-1.5 text-xs font-semibold text-black"
                   >
-                    Escribirme por WhatsApp
+                    {t("aiChat.contactWhatsapp")}
                   </a>
                 )}
                 {Array.isArray(message.actions) && message.actions.length > 0 && (
@@ -301,7 +300,7 @@ const PortfolioAIChat = () => {
             ))}
             {loading && (
               <article className="mr-auto rounded-xl px-3 py-2 text-sm bg-white/8 text-neutral-200">
-                Thinking...
+                {t("aiChat.thinking")}
               </article>
             )}
           </div>
@@ -318,7 +317,7 @@ const PortfolioAIChat = () => {
                   }
                 }}
                 rows={2}
-                placeholder="Ask about Julian's projects, stack, or experience..."
+                placeholder={t("aiChat.placeholder")}
                 className="w-full px-3 py-2 text-base text-white rounded-lg resize-none bg-white/10 md:text-sm field-input-focus placeholder:text-neutral-400"
               />
               <button
@@ -327,7 +326,7 @@ const PortfolioAIChat = () => {
                 onClick={() => handleSend()}
                 className="px-3 py-2 text-sm font-semibold text-white rounded-lg bg-lavender disabled:opacity-60"
               >
-                Send
+                {t("aiChat.send")}
               </button>
             </div>
             {error && <p className="mt-2 text-xs text-red-300">{error}</p>}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import ProjectDetails from "./ProjectDetails";
 
 const Project = ({
@@ -11,6 +12,7 @@ const Project = ({
   tags,
   setPreview,
 }) => {
+  const { t } = useTranslation();
   const [isHidden, setIsHidden] = useState(false);
   return (
     <>
@@ -20,7 +22,7 @@ const Project = ({
         onMouseLeave={() => setPreview(null)}
       >
         <div>
-          <p className="text-2xl">{title}</p>
+          <p className="text-2xl">{t(title)}</p>
           <div className="flex gap-5 mt-2 text-sand">
             {tags.map((tag) => (
               <span key={tag.id}>{tag.name}</span>
@@ -31,7 +33,7 @@ const Project = ({
           onClick={() => setIsHidden(true)}
           className="flex items-center gap-1 cursor-pointer hover-animation"
         >
-          Read More
+          {t("projects.readMore")}
           <img src={`${import.meta.env.BASE_URL}assets/arrow-right.svg`} className="w-5" alt="arrow-right icon" />
         </button>
       </div>

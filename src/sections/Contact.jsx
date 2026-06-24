@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import { useTranslation } from "react-i18next";
 import Alert from "../components/Alert";
 import { Particles } from "../components/Particles";
 
 const Contact = () => {
+  const { t } = useTranslation();
   const formRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -23,18 +25,18 @@ const Contact = () => {
 
     try {
       const response = await emailjs.sendForm(
-          "default_service",       // Igual que Playground
-          "template_zmu9esh",      // Plantilla de auto-reply (funciona)
+          "default_service",
+          "template_zmu9esh",
           formRef.current,
-          "MtKoIuDJShPTvSMcd"      // Public Key
+          "MtKoIuDJShPTvSMcd"
       );
 
       console.log("EmailJS Response:", response);
-      showAlertMessage("success", "Your message has been sent!");
+      showAlertMessage("success", t("contact.successMsg"));
       e.target.reset();
     } catch (error) {
       console.error("EmailJS Error:", error);
-      showAlertMessage("danger", "Something went wrong! Check console.");
+      showAlertMessage("danger", t("contact.errorMsg"));
     } finally {
       setIsLoading(false);
     }
@@ -52,23 +54,22 @@ const Contact = () => {
         {showAlert && <Alert type={alertType} text={alertMessage} />}
         <div className="flex flex-col items-center justify-center max-w-md p-5 mx-auto border border-white/10 rounded-2xl bg-primary">
           <div className="flex flex-col items-start w-full gap-5 mb-10">
-            <h2 className="text-heading">Let's Talk</h2>
+            <h2 className="text-heading">{t("contact.title")}</h2>
             <p className="font-normal text-neutral-400">
-              Whether you're looking to build a new website, improve your existing platform,
-              or bring a unique project to life, I'm here to help.
+              {t("contact.subtitle")}
             </p>
           </div>
           <form ref={formRef} className="w-full" onSubmit={handleSubmit}>
             <div className="mb-5">
-              <label htmlFor="user_name" className="feild-label">Full Name</label>
+              <label htmlFor="user_name" className="feild-label">{t("contact.nameLabel")}</label>
               <input id="user_name" name="user_name" type="text" className="field-input field-input-focus" required />
             </div>
             <div className="mb-5">
-              <label htmlFor="user_email" className="feild-label">Email</label>
+              <label htmlFor="user_email" className="feild-label">{t("contact.emailLabel")}</label>
               <input id="user_email" name="user_email" type="email" className="field-input field-input-focus" required />
             </div>
             <div className="mb-5">
-              <label htmlFor="message" className="feild-label">Message</label>
+              <label htmlFor="message" className="feild-label">{t("contact.messageLabel")}</label>
               <textarea id="message" name="message" rows="4" className="field-input field-input-focus" required />
             </div>
             <input type="hidden" name="subject" value="New contact from website" />
@@ -77,7 +78,7 @@ const Contact = () => {
                 type="submit"
                 className="w-full px-1 py-3 text-lg text-center rounded-md cursor-pointer bg-radial from-lavender to-royal hover-animation"
             >
-              {!isLoading ? "Send" : "Sending..."}
+              {isLoading ? t("contact.sendingBtn") : t("contact.sendBtn")}
             </button>
           </form>
         </div>

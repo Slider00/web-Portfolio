@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 const ProjectDetails = ({
   title,
   description,
@@ -10,6 +11,7 @@ const ProjectDetails = ({
   href,
   closeModal,
 }) => {
+  const { t } = useTranslation();
   const gallery = images.length ? images : [image];
   const [activeImage, setActiveImage] = useState(gallery[0]);
 
@@ -51,10 +53,10 @@ const ProjectDetails = ({
           </div>
         )}
         <div className="p-5">
-          <h5 className="mb-2 text-2xl font-bold text-white">{title}</h5>
-          <p className="mb-3 font-normal text-neutral-400">{description}</p>
+          <h5 className="mb-2 text-2xl font-bold text-white">{t(title)}</h5>
+          <p className="mb-3 font-normal text-neutral-400">{t(description)}</p>
           {subDescription.map((subDesc, index) => (
-            <p key={index} className="mb-3 font-normal text-neutral-400">{subDesc}</p>
+            <p key={index} className="mb-3 font-normal text-neutral-400">{t(subDesc)}</p>
           ))}
           <div className="flex items-center justify-between mt-4">
             <div className="flex gap-3">
@@ -73,7 +75,7 @@ const ProjectDetails = ({
               rel="noreferrer"
               className="inline-flex items-center gap-1 font-medium cursor-pointer hover-animation"
             >
-              View Project{" "}
+              {t("projects.viewProject")}{" "}
               <img src={`${import.meta.env.BASE_URL}assets/arrow-up.svg`} className="size-4" alt="arrow icon" />
             </a>
           </div>

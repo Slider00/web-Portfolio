@@ -1,8 +1,14 @@
 import { FlipWords } from "./FlipWords";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 const HeroText = () => {
-  const words = ["Secure", "Modern", "Scalable"];
+  const { t } = useTranslation();
+  const words = [
+    t("hero.wordSecure"),
+    t("hero.wordModern"),
+    t("hero.wordScalable")
+  ];
   const variants = {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0 },
@@ -18,7 +24,7 @@ const HeroText = () => {
           animate="visible"
           transition={{ duration: 0.35 }}
         >
-          Hi, I'm Julian
+          {t("hero.greeting")}
         </motion.h1>
         <div className="flex flex-col items-start">
           <motion.p
@@ -28,7 +34,7 @@ const HeroText = () => {
             animate="visible"
             transition={{ duration: 0.4, delay: 0.05 }}
           >
-            A Developer <br /> Dedicated to Crafting
+            {t("hero.titleCraftingPart1")} <br /> {t("hero.titleCraftingPart2")}
           </motion.p>
           <motion.div
             variants={variants}
@@ -48,7 +54,7 @@ const HeroText = () => {
             animate="visible"
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            Web Solutions
+            {t("hero.titleWebSolutions")}
           </motion.p>
         </div>
       </div>
@@ -61,7 +67,7 @@ const HeroText = () => {
           animate="visible"
           transition={{ duration: 0.3 }}
         >
-          Hi, I'm Julian
+          {t("hero.greeting")}
         </motion.p>
         <div>
           <motion.p
@@ -71,7 +77,7 @@ const HeroText = () => {
             animate="visible"
             transition={{ duration: 0.35, delay: 0.05 }}
           >
-            Building
+            {t("hero.titleBuilding")}
           </motion.p>
           <motion.div
             variants={variants}
@@ -92,7 +98,7 @@ const HeroText = () => {
             animate="visible"
             transition={{ duration: 0.45, delay: 0.15 }}
           >
-            Web Applications
+            {t("hero.titleWebApps")}
           </motion.p>
         </div>
       </div>

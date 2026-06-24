@@ -3,11 +3,10 @@ const base = import.meta.env.BASE_URL;
 export const myProjects = [
   {
     id: 1,
-    title: "E-commerce Platform",
-    description:
-        "Facilitates purchases from international websites like Amazon and eBay, allowing customers to shop from these sites and have products delivered domestically.",
+    title: "projects.ecommerce.title",
+    description: "projects.ecommerce.description",
     subDescription: [
-      "Built a scalable application with ASP.NET Core MVC...",
+      "projects.ecommerce.subDescription0",
     ],
     href: "",
     logo: "",
@@ -21,11 +20,10 @@ export const myProjects = [
   },
   {
     id: 2,
-    title: "Authentication & Authorization System",
-    description:
-        "A secure authentication and authorization system...",
+    title: "projects.auth.title",
+    description: "projects.auth.description",
     subDescription: [
-      "Integrated Auth0 for authentication...",
+      "projects.auth.subDescription0",
     ],
     href: "",
     logo: "",
@@ -39,10 +37,10 @@ export const myProjects = [
   },
   {
     id: 3,
-    title: "Blazor Web App",
-    description: "A modern, interactive web application...",
+    title: "projects.blazor.title",
+    description: "projects.blazor.description",
     subDescription: [
-      "Developed a fully interactive SPA...",
+      "projects.blazor.subDescription0",
     ],
     href: "",
     logo: "",
@@ -56,10 +54,10 @@ export const myProjects = [
   },
   {
     id: 4,
-    title: "C++ Game Engine",
-    description: "A lightweight C++ game engine...",
+    title: "projects.cpp.title",
+    description: "projects.cpp.description",
     subDescription: [
-      "Built a powerful rendering engine...",
+      "projects.cpp.subDescription0",
     ],
     href: "",
     logo: "",
@@ -73,10 +71,10 @@ export const myProjects = [
   },
   {
     id: 5,
-    title: "WordPress Custom Theme",
-    description: "A fully customizable WordPress theme...",
+    title: "projects.wordpress.title",
+    description: "projects.wordpress.description",
     subDescription: [
-      "Developed a responsive WordPress theme...",
+      "projects.wordpress.subDescription0",
     ],
     href: "",
     logo: "",
@@ -90,10 +88,10 @@ export const myProjects = [
   },
   {
     id: 6,
-    title: "Online Learning Platform",
-    description: "A web application for video courses and quizzes...",
+    title: "projects.learning.title",
+    description: "projects.learning.description",
     subDescription: [
-      "Built using Blazor WebAssembly...",
+      "projects.learning.subDescription0",
     ],
     href: "",
     logo: "",
@@ -107,10 +105,10 @@ export const myProjects = [
   },
   {
     id: 7,
-    title: "Flutter Mobile App",
-    description: "Cross-platform app focused on fast UX and clean architecture.",
+    title: "projects.flutter.title",
+    description: "projects.flutter.description",
     subDescription: [
-      "Built with Flutter and Dart using reusable widgets and state-driven UI flows.",
+      "projects.flutter.subDescription0",
     ],
     href: "",
     logo: "",
@@ -141,10 +139,10 @@ export const myProjects = [
   },
   {
     id: 8,
-    title: "React + Vite Web Platform",
-    description: "Modern web platform optimized for performance and scalability.",
+    title: "projects.react.title",
+    description: "projects.react.description",
     subDescription: [
-      "Implemented modular components, responsive layouts, and fast builds with Vite.",
+      "projects.react.subDescription0",
     ],
     href: "",
     logo: "",
@@ -161,10 +159,10 @@ export const myProjects = [
   },
   {
     id: 9,
-    title: "SaaS-based POS System",
-    description: "Backend-oriented system for secure data management workflows.",
+    title: "projects.saas.title",
+    description: "projects.saas.description",
     subDescription: [
-      "Developed PHP services and relational data structures for business operations.",
+      "projects.saas.subDescription0",
     ],
     href: "",
     logo: "",
@@ -184,54 +182,54 @@ export const mySocials = [
 
 export const experiences = [
   {
-    title: "Front End Developer (Web & Mobile App)",
-    job: "Innventa software y technology",
+    title: "experiences.innventa.title",
+    job: "experiences.innventa.job",
     date: "2020-2025",
     contents: [
-      "Built front-end interfaces for web and mobile applications with a strong focus on scalable architecture, maintainability, and user experience.",
-      "Implemented reusable component systems and responsive layouts across multiple devices and screen resolutions.",
-      "Integrated REST APIs, handled complex state management, and implemented form validation for business-critical workflows.",
-      "Applied performance best practices (lazy loading, render optimization, bundle reduction) and accessibility standards.",
-      "Collaborated closely with design, backend, and QA teams under agile methodologies to deliver high-impact releases continuously.",
+      "experiences.innventa.content0",
+      "experiences.innventa.content1",
+      "experiences.innventa.content2",
+      "experiences.innventa.content3",
+      "experiences.innventa.content4",
     ],
   },
   {
-    title: "Senior Front End Developer (Web & Mobile App)",
-    job: "Bety (Professional Services)",
+    title: "experiences.bety.title",
+    job: "experiences.bety.job",
     date: "2025-2026",
     contents: [
-      "Led the web and mobile front-end domain, defining code standards, project structure, and consistent UI guidelines.",
-      "Designed and evolved SaaS product interfaces, improving usability, conversion, and navigation flow.",
-      "Delivered advanced performance optimizations for mobile and desktop (3D rendering, interactions, scrolling, and critical asset loading).",
-      "Provided technical mentorship to the front-end team in architecture, debugging, code quality, and development best practices.",
-      "Coordinated strategically with product, design, and business stakeholders to prioritize features, reduce technical debt, and accelerate releases.",
+      "experiences.bety.content0",
+      "experiences.bety.content1",
+      "experiences.bety.content2",
+      "experiences.bety.content3",
+      "experiences.bety.content4",
     ],
   },
 ];
 
 export const reviews = [
   {
-    name: "Jack", username: "@jack", body: "Amazing. I love it.", img: "https://robohash.org/jack",
+    name: "Jack", username: "@jack", body: "reviews.jack", img: "https://robohash.org/jack",
   },
   {
-    name: "Jill", username: "@jill", body: "Speechless. This is amazing.", img: "https://robohash.org/jill",
+    name: "Jill", username: "@jill", body: "reviews.jill", img: "https://robohash.org/jill",
   },
   {
-    name: "John", username: "@john", body: "I love it.", img: "https://robohash.org/john",
+    name: "John", username: "@john", body: "reviews.john", img: "https://robohash.org/john",
   },
   {
-    name: "Alice", username: "@alice", body: "Highly recommend!", img: "https://robohash.org/alice",
+    name: "Alice", username: "@alice", body: "reviews.alice", img: "https://robohash.org/alice",
   },
   {
-    name: "Bob", username: "@bob", body: "Phenomenal attention to detail.", img: "https://robohash.org/bob",
+    name: "Bob", username: "@bob", body: "reviews.bob", img: "https://robohash.org/bob",
   },
   {
-    name: "Charlie", username: "@charlie", body: "Absolutely stunning!", img: "https://robohash.org/charlie",
+    name: "Charlie", username: "@charlie", body: "reviews.charlie", img: "https://robohash.org/charlie",
   },
   {
-    name: "Dave", username: "@dave", body: "Best decision I've made.", img: "https://robohash.org/dave",
+    name: "Dave", username: "@dave", body: "reviews.dave", img: "https://robohash.org/dave",
   },
   {
-    name: "Eve", username: "@eve", body: "Changed the game for me.", img: "https://robohash.org/eve",
+    name: "Eve", username: "@eve", body: "reviews.eve", img: "https://robohash.org/eve",
   },
 ];

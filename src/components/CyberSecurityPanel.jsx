@@ -1,9 +1,10 @@
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 const events = [
-  { label: "Port Scan Blocked", level: "high" },
-  { label: "Suspicious Login Denied", level: "medium" },
-  { label: "Payload Sanitized", level: "low" },
+  { label: "cyberShield.scanBlocked", level: "high" },
+  { label: "cyberShield.loginDenied", level: "medium" },
+  { label: "cyberShield.payloadSanitized", level: "low" },
 ];
 
 const levelColor = {
@@ -13,20 +14,22 @@ const levelColor = {
 };
 
 export default function CyberSecurityPanel() {
+  const { t } = useTranslation();
+  
   return (
     <div className="relative w-full h-full p-4 md:p-5 overflow-hidden rounded-2xl">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(51,194,204,0.18),transparent_42%),radial-gradient(circle_at_82%_24%,rgba(122,87,219,0.18),transparent_46%)]" />
       <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:22px_22px]" />
 
       <div className="relative z-10 flex items-center justify-between">
-        <p className="text-lg font-semibold tracking-wide text-white/90">Cyber Shield</p>
+        <p className="text-lg font-semibold tracking-wide text-white/90">{t("cyberShield.title")}</p>
         <div className="flex items-center gap-2 px-2 py-1 text-[10px] tracking-wider rounded-full bg-mint/15 ring-1 ring-mint/35 text-mint">
           <motion.span
             className="rounded-full size-1.5 bg-mint"
             animate={{ opacity: [0.3, 1, 0.3], scale: [0.9, 1.2, 0.9] }}
             transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }}
           />
-          SECURE
+          {t("cyberShield.status")}
         </div>
       </div>
 
@@ -60,8 +63,10 @@ export default function CyberSecurityPanel() {
               animate={{ opacity: [0.55, 1, 0.55] }}
               transition={{ duration: 1.6 + i * 0.35, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-white/85">{event.label}</span>
-              <span className={levelColor[event.level]}>{event.level.toUpperCase()}</span>
+              <span className="text-white/85">{t(event.label)}</span>
+              <span className={levelColor[event.level]}>
+                {t(`cyberShield.level${event.level.charAt(0).toUpperCase() + event.level.slice(1)}`)}
+              </span>
             </motion.div>
           ))}
         </div>

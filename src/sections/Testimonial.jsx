@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
+import { useTranslation } from "react-i18next";
 import Marquee from "../components/Marquee";
 import { reviews } from "../constants";
 
@@ -31,6 +32,7 @@ const ReviewCard = ({ img, name, username, body }) => {
 };
 
 export default function Testimonial() {
+  const { t, i18n } = useTranslation();
   const [reviewsList, setReviewsList] = useState(reviews);
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
@@ -69,7 +71,7 @@ export default function Testimonial() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !body.trim()) {
-      setError("Por favor, llena los campos requeridos (Nombre y Comentario).");
+      setError(t("testimonial.errorRequired"));
       return;
     }
 
@@ -83,7 +85,7 @@ export default function Testimonial() {
       ? userName.trim().startsWith("@")
         ? userName.trim()
         : `@${userName.trim()}`
-      : "@anonimo";
+      : t("testimonial.anonymous");
 
     const newReview = {
       name: name.trim(),
@@ -100,7 +102,7 @@ export default function Testimonial() {
       });
       
       if (!response.ok) {
-        throw new Error('Error al guardar el comentario en el servidor');
+        throw new Error(t('testimonial.errorSave'));
       }
       
       const savedReview = await response.json();
@@ -114,7 +116,7 @@ export default function Testimonial() {
       // Desvanecer el mensaje de éxito después de unos segundos
       setTimeout(() => setSuccess(false), 4000);
     } catch (err) {
-      setError("No se pudo publicar el testimonio en este momento. Inténtalo de nuevo.");
+      setError(t("testimonial.errorPublish"));
       console.error(err);
     } finally {
       setLoading(false);
@@ -123,7 +125,7 @@ export default function Testimonial() {
 
   return (
     <div className="items-start mt-25 md:mt-35 c-space" id="testimonials">
-      <h2 className="text-heading">Hear From My Clients</h2>
+      <h2 className="text-heading">{t("testimonial.title")}</h2>
       
       {/* Carruseles Animados */}
       <div className="relative flex flex-col items-center justify-center w-full mt-12 overflow-hidden">
@@ -144,14 +146,14 @@ export default function Testimonial() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mt-16 bg-gradient-to-b from-storm to-indigo p-6 md:p-8 rounded-2xl border border-white/10">
         <div className="md:col-span-5 flex flex-col justify-between">
           <div>
-            <h3 className="text-xl font-bold text-white mb-2">Comparte tu Experiencia</h3>
+            <h3 className="text-xl font-bold text-white mb-2">{t("testimonial.formTitle")}</h3>
             <p className="text-sm text-neutral-300 leading-relaxed">
-              ¿Hemos trabajado juntos o tienes algún comentario sobre mi trabajo? Deja tu opinión o el de tu empresa para que aparezca en el carrusel superior en tiempo real.
+              {t("testimonial.formSubtitle")}
             </p>
           </div>
           {/* Avatar Preview Dinámico */}
           <div className="hidden md:flex flex-col items-center gap-2 mt-6 p-4 rounded-xl bg-midnight/50 border border-white/5 w-fit">
-            <span className="text-[10px] uppercase font-bold text-neutral-400">Avatar Generado</span>
+            <span className="text-[10px] uppercase font-bold text-neutral-400">{t("testimonial.avatarGenerated")}</span>
             <div className="size-16 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border border-lavender/30">
               <img
                 src={`https://robohash.org/${encodeURIComponent(name.trim() || "JulianCorrea")}?size=100x100`}
@@ -159,28 +161,30 @@ export default function Testimonial() {
                 className="size-full object-cover"
               />
             </div>
-            <span className="text-xs text-neutral-300 font-semibold">{name.trim() || "Tu Nombre / Empresa"}</span>
+            <span className="text-xs text-neutral-300 font-semibold">
+              {name.trim() || (i18n.language === "es" ? "Tu Nombre / Empresa" : "Your Name / Company")}
+            </span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="md:col-span-7 flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-neutral-300 font-semibold uppercase">Nombre o Empresa *</label>
+              <label className="text-xs text-neutral-300 font-semibold uppercase">{t("testimonial.nameOrCompanyLabel")}</label>
               <input
                 type="text"
                 required
-                placeholder="Ej. Tesla o Carlos Gómez"
+                placeholder={t("testimonial.namePlaceholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-midnight border border-white/10 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lavender"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-neutral-300 font-semibold uppercase">Handle / Cargo</label>
+              <label className="text-xs text-neutral-300 font-semibold uppercase">{t("testimonial.handleLabel")}</label>
               <input
                 type="text"
-                placeholder="Ej. @ceo o Tech Lead"
+                placeholder={t("testimonial.handlePlaceholder")}
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 className="bg-midnight border border-white/10 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lavender"
@@ -189,11 +193,11 @@ export default function Testimonial() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-neutral-300 font-semibold uppercase">Tu Comentario *</label>
+            <label className="text-xs text-neutral-300 font-semibold uppercase">{t("testimonial.yourCommentLabel")}</label>
             <textarea
               required
               rows={3}
-              placeholder="Escribe tu testimonio aquí..."
+              placeholder={t("testimonial.commentPlaceholder")}
               value={body}
               onChange={(e) => setBody(e.target.value)}
               className="bg-midnight border border-white/10 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lavender resize-none"
@@ -206,12 +210,12 @@ export default function Testimonial() {
               disabled={loading}
               className="px-6 py-2.5 bg-lavender hover:bg-lavender/85 text-white font-semibold text-sm rounded-lg transition disabled:opacity-50 cursor-pointer"
             >
-              {loading ? "Enviando..." : "Publicar Comentario"}
+              {loading ? t("testimonial.sendingBtn") : t("testimonial.submitBtn")}
             </button>
 
             {success && (
               <span className="text-xs text-emerald-400 font-semibold animate-pulse">
-                ¡Publicado! Aparecerá en el carrusel arriba.
+                {t("testimonial.successMsg")}
               </span>
             )}
             {error && (

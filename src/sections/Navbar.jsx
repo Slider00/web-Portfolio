@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { motion, useScroll, useSpring } from "motion/react";
-function Navigation({ onNavigate }) {
-  const [isCvOpen, setIsCvOpen] = useState(false);
-  const base = import.meta.env.BASE_URL;
+import { useTranslation } from "react-i18next";
 
-  const handleDownload = () => {
-    setIsCvOpen(false);
-    onNavigate?.();
-  };
+function Navigation({ onNavigate }) {
+  const { t, i18n } = useTranslation();
+  const base = import.meta.env.BASE_URL;
 
   return (
       <ul className="nav-ul">
@@ -15,64 +12,49 @@ function Navigation({ onNavigate }) {
               <button
                   onClick={() => window.location.href = `${base}coins.html`}
               >
-                  Cryptocurrency
+                  {t('nav.cryptocurrency')}
               </button>
           </li>
 
           <li className="nav-li">
               <a className="nav-link" href={`${base}`} onClick={onNavigate}>
-                  Home
+                  {t('nav.home')}
               </a>
           </li>
           <li className="nav-li">
               <a className="nav-link" href="#about" onClick={onNavigate}>
-                  About
+                  {t('nav.about')}
               </a>
           </li>
           <li className="nav-li">
               <a className="nav-link" href="#work" onClick={onNavigate}>
-                  Work
+                  {t('nav.work')}
               </a>
           </li>
           <li className="nav-li">
               <a className="nav-link" href="#recruiter" onClick={onNavigate}>
-                  Recruiter Hub
+                  {t('nav.recruiterHub')}
               </a>
           </li>
           <li className="nav-li">
               <a className="nav-link" href="#testimonials" onClick={onNavigate}>
-                  Testimonials
+                  {t('nav.testimonials')}
               </a>
           </li>
           <li className="nav-li">
               <a className="nav-link" href="#contact" onClick={onNavigate}>
-                  Contact
+                  {t('nav.contact')}
               </a>
           </li>
-          <li className="relative nav-li">
-              <button className="nav-link" onClick={() => setIsCvOpen((v) => !v)}>
-                CV
-              </button>
-              {isCvOpen && (
-                <div className="z-30 p-2 mt-2 rounded-md shadow-lg sm:absolute sm:right-0 min-w-40 bg-midnight/95 ring-1 ring-white/10">
-                  <a
-                    className="block px-3 py-2 text-sm rounded-md text-neutral-200 hover:bg-white/10"
-                    href={`${base}models/cv.pdf`}
-                    download="Julian-Correa-CV-ES.pdf"
-                    onClick={handleDownload}
-                  >
-                    CV Español
-                  </a>
-                  <a
-                    className="block px-3 py-2 mt-1 text-sm rounded-md text-neutral-200 hover:bg-white/10"
-                    href={`${base}models/cv-en.pdf`}
-                    download="Julian-Correa-CV-EN.pdf"
-                    onClick={handleDownload}
-                  >
-                    CV English
-                  </a>
-                </div>
-              )}
+          <li className="nav-li">
+              <a
+                className="nav-link"
+                href={i18n.language === "es" ? `${base}models/cv.pdf` : `${base}models/cv-en.pdf`}
+                download={i18n.language === "es" ? "Julian-Correa-CV-ES.pdf" : "Julian-Correa-CV-EN.pdf"}
+                onClick={onNavigate}
+              >
+                {t('nav.cv')}
+              </a>
           </li>
       </ul>
   );

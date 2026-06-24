@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+
 const CopyEmailButton = () => {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const email = "julian.correa.556@unisabaneta.edu.co";
 
@@ -12,6 +15,7 @@ const CopyEmailButton = () => {
       setCopied(false);
     }, 2000);
   };
+  
   return (
     <motion.button
       onClick={copyToClipboard}
@@ -30,7 +34,7 @@ const CopyEmailButton = () => {
             transition={{ duration: 0.1, ease: "easeInOut" }}
           >
             <img src={`${import.meta.env.BASE_URL}assets/copy-done.svg`} className="w-5" alt="copy Icon" />
-            Email has Copied
+            {t("copyEmail.copied")}
           </motion.p>
         ) : (
           <motion.p
@@ -42,7 +46,7 @@ const CopyEmailButton = () => {
             transition={{ duration: 0.1 }}
           >
             <img src={`${import.meta.env.BASE_URL}assets/copy.svg`} className="w-5" alt="copy icon" />
-            Copy Email Address
+            {t("copyEmail.copy")}
           </motion.p>
         )}
       </AnimatePresence>

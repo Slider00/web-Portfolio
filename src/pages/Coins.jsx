@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { createRoot } from "react-dom/client";
+import { useTranslation } from "react-i18next";
 import Footer from "../sections/Footer";
 import "../index.css";
+import "../i18n"; // Import i18n initialization
 import axios from "axios";
 import TableCoins from "../components/TableCoins";
 import Pagination from "../components/Pagination";
 
 // Barra de búsqueda con botón de volver
 function SearchBar({ onSearch }) {
+    const { t } = useTranslation();
     const [inputValue, setInputValue] = useState("");
 
     // Evitar que se llame onSearch en cada tecla (debounce)
@@ -28,8 +31,8 @@ function SearchBar({ onSearch }) {
                 onClick={() =>
                     (window.location.href = `${import.meta.env.BASE_URL}`)
                 }
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 transition"
-                aria-label="Volver al inicio"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 transition cursor-pointer"
+                aria-label={t("coins.backTooltip")}
             >
                 👈
             </button>
@@ -39,7 +42,7 @@ function SearchBar({ onSearch }) {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Search by coins 🔎"
+                placeholder={t("coins.searchPlaceholder")}
                 className="flex-1 px-4 py-2 rounded-lg bg-zinc-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 shadow-md"
             />
         </div>
@@ -47,6 +50,7 @@ function SearchBar({ onSearch }) {
 }
 
 function CoinsPage() {
+    const { t } = useTranslation();
     const [coins, setCoins] = useState([]);
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
@@ -153,7 +157,9 @@ function CoinsPage() {
             )}
 
             {!loading && !error && totalPages === 1 && (
-                <p className="text-center text-gray-400 my-4">Page 1 of 1</p>
+                <p className="text-center text-gray-400 my-4">
+                    {t("coins.pageOf", { current: 1, total: 1 })}
+                </p>
             )}
 
             <Footer />

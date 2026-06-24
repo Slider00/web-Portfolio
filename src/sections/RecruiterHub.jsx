@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Radar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -34,25 +35,25 @@ const SKILLS_LIST = [
 
 const PRESETS = {
   frontend: {
-    name: "Front End Developer",
+    nameKey: "recruiter.presetFrontend",
     skills: ["react", "javascript", "tailwindcss", "git"],
     experience: "mid",
     mode: "remote",
   },
   mobile: {
-    name: "Mobile App Developer",
+    nameKey: "recruiter.presetMobile",
     skills: ["flutter", "javascript", "ionic", "git"],
     experience: "mid",
     mode: "remote",
   },
   fullstack: {
-    name: "Full Stack Developer",
+    nameKey: "recruiter.presetFullstack",
     skills: ["react", "javascript", "tailwindcss", "csharp", "dotnet", "git"],
     experience: "senior",
     mode: "remote",
   },
   custom: {
-    name: "Perfil Personalizado",
+    nameKey: "recruiter.presetCustom",
     skills: [],
     experience: "mid",
     mode: "remote",
@@ -60,6 +61,7 @@ const PRESETS = {
 };
 
 const RecruiterHub = () => {
+  const { t, i18n } = useTranslation();
   const base = import.meta.env.BASE_URL;
   const [rolePreset, setRolePreset] = useState("frontend");
   const [selectedSkills, setSelectedSkills] = useState(PRESETS.frontend.skills);
@@ -125,15 +127,15 @@ const RecruiterHub = () => {
     // Feedback descriptivo
     let feedback = "";
     if (finalScore >= 90) {
-      feedback = "¡Match Excelente! Julián cuenta con las tecnologías y condiciones de trabajo ideales para tu vacante. Está listo para aportar valor desde el día uno.";
+      feedback = t("recruiter.feedbackExcellent");
     } else if (finalScore >= 75) {
-      feedback = "Match Fuerte. Cumple con la mayoría de tus requisitos y tiene gran flexibilidad para adaptarse al rol rápidamente.";
+      feedback = t("recruiter.feedbackStrong");
     } else {
-      feedback = "Match Moderado. Aunque su stack principal varía, su sólida base en Javascript, C# y desarrollo móvil le permite realizar una transición exitosa.";
+      feedback = t("recruiter.feedbackModerate");
     }
 
     return { score: finalScore, feedback };
-  }, [selectedSkills, experience, mode]);
+  }, [selectedSkills, experience, mode, t]);
 
   // Generar mensaje de contacto predeterminado
   const contactText = useMemo(() => {
@@ -142,8 +144,14 @@ const RecruiterHub = () => {
       .filter(Boolean)
       .join(", ");
     
-    return `Hola Julián, visité tu portafolio y vi que tenemos una compatibilidad de contratación del ${fitResult.score}% para nuestra posición de desarrollo (${mode === "remote" ? "Remota" : mode === "hybrid" ? "Híbrida" : "Presencial"}) requiriendo habilidades en: ${skillNames || "Desarrollo General"}. ¿Te interesaría conversar?`;
-  }, [selectedSkills, fitResult.score, mode]);
+    const translatedMode = t(`recruiter.${mode}`);
+    
+    return t("recruiter.defaultContactMsg", {
+      score: fitResult.score,
+      mode: translatedMode,
+      skills: skillNames || (i18n.language === "es" ? "Desarrollo General" : "General Development")
+    });
+  }, [selectedSkills, fitResult.score, mode, t, i18n.language]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(contactText);
@@ -171,15 +179,15 @@ const RecruiterHub = () => {
 
     return {
       labels: [
-        "Frontend (React/Vite)",
-        "Mobile (Flutter/Ionic)",
-        "Backend (.NET/PHP)",
-        "Herramientas (Git/CI)",
-        "Habilidades Blandas",
+        t("recruiter.radarLabels.frontend"),
+        t("recruiter.radarLabels.mobile"),
+        t("recruiter.radarLabels.backend"),
+        t("recruiter.radarLabels.tools"),
+        t("recruiter.radarLabels.softSkills"),
       ],
       datasets: [
         {
-          label: "Julián Correa (Capacidad)",
+          label: t("recruiter.julianCapacity"),
           data: julianProfile,
           backgroundColor: "rgba(122, 87, 219, 0.2)", // --color-lavender
           borderColor: "#7a57db",
@@ -190,7 +198,7 @@ const RecruiterHub = () => {
           pointHoverBorderColor: "#7a57db",
         },
         {
-          label: "Tu Requisito de Empleo",
+          label: t("recruiter.yourRequirement"),
           data: [
             requiredFrontend,
             requiredMobile,
@@ -209,7 +217,7 @@ const RecruiterHub = () => {
         },
       ],
     };
-  }, [selectedSkills, experience]);
+  }, [selectedSkills, experience, t]);
 
   const radarOptions = {
     responsive: true,
@@ -251,9 +259,9 @@ const RecruiterHub = () => {
     <section className="c-space section-spacing" id="recruiter">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-heading text-white">Recruiter Hub</h2>
+          <h2 className="text-heading text-white">{t("recruiter.title")}</h2>
           <p className="subtext mt-2">
-            Simula las necesidades de tu vacante y analiza mi compatibilidad y perfil en tiempo real.
+            {t("recruiter.subtitle")}
           </p>
         </div>
         {/* Pulsing Availability Badge */}
@@ -263,7 +271,7 @@ const RecruiterHub = () => {
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
           <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wide">
-            Disponible para Entrevistas
+            {t("recruiter.availableBadge")}
           </span>
         </div>
       </div>
@@ -272,30 +280,30 @@ const RecruiterHub = () => {
         {/* COL 1: Vacancy Controls (Left Side) */}
         <div className="lg:col-span-7 flex flex-col gap-6 grid-default-color p-6 md:p-8">
           <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-            ⚙️ Configura tu Vacante
+            {t("recruiter.configureTitle")}
           </h3>
 
           {/* Role Preset Selector */}
           <div className="flex flex-col gap-2">
             <label className="text-xs text-neutral-300 font-semibold uppercase tracking-wider">
-              1. Selecciona un Perfil de Rol
+              {t("recruiter.presetLabel")}
             </label>
             <select
               value={rolePreset}
               onChange={handlePresetChange}
               className="w-full bg-midnight border border-white/10 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-lavender"
             >
-              <option value="frontend">Front End Developer (Especialidad)</option>
-              <option value="mobile">Mobile App Developer (Especialidad)</option>
-              <option value="fullstack">Full Stack Developer (.NET + React)</option>
-              <option value="custom">Perfil Personalizado (Elige habilidades abajo)</option>
+              <option value="frontend">{t("recruiter.presetFrontend")}</option>
+              <option value="mobile">{t("recruiter.presetMobile")}</option>
+              <option value="fullstack">{t("recruiter.presetFullstack")}</option>
+              <option value="custom">{t("recruiter.presetCustom")}</option>
             </select>
           </div>
 
           {/* Skill Selector Checkboxes */}
           <div className="flex flex-col gap-2">
             <label className="text-xs text-neutral-300 font-semibold uppercase tracking-wider">
-              2. Habilidades Requeridas
+              {t("recruiter.skillsLabel")}
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-1">
               {SKILLS_LIST.map((skill) => {
@@ -327,7 +335,7 @@ const RecruiterHub = () => {
             {/* Experience level Selection */}
             <div className="flex flex-col gap-2">
               <label className="text-xs text-neutral-300 font-semibold uppercase tracking-wider">
-                3. Seniority Requerido
+                {t("recruiter.seniorityLabel")}
               </label>
               <div className="flex bg-midnight rounded-lg p-1 border border-white/10">
                 {["junior", "mid", "senior"].map((exp) => (
@@ -352,7 +360,7 @@ const RecruiterHub = () => {
             {/* Mode Selection */}
             <div className="flex flex-col gap-2">
               <label className="text-xs text-neutral-300 font-semibold uppercase tracking-wider">
-                4. Esquema Laboral
+                {t("recruiter.workplaceLabel")}
               </label>
               <div className="flex bg-midnight rounded-lg p-1 border border-white/10">
                 {["remote", "hybrid", "onsite"].map((m) => (
@@ -368,7 +376,7 @@ const RecruiterHub = () => {
                         : "text-neutral-400 hover:text-white"
                     }`}
                   >
-                    {m === "onsite" ? "Presencial" : m}
+                    {t(`recruiter.${m}`)}
                   </button>
                 ))}
               </div>
@@ -386,7 +394,7 @@ const RecruiterHub = () => {
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-bold text-white">Resultado de Compatibilidad</h4>
+                <h4 className="text-sm font-bold text-white">{t("recruiter.scoreTitle")}</h4>
                 <p className="text-xs text-neutral-300 mt-1 leading-relaxed">
                   {fitResult.feedback}
                 </p>
@@ -398,7 +406,7 @@ const RecruiterHub = () => {
         {/* COL 2: Radar Chart & Actions (Right Side) */}
         <div className="lg:col-span-5 flex flex-col gap-6 grid-black-color p-6 md:p-8 justify-between">
           <h3 className="text-lg font-bold text-white flex items-center gap-2">
-            📊 Gráfico de Cobertura de Habilidades
+            {t("recruiter.chartTitle")}
           </h3>
 
           {/* Chart Wrapper with fixed height to prevent overflow */}
@@ -409,7 +417,7 @@ const RecruiterHub = () => {
           {/* Interactive Action Hub */}
           <div className="flex flex-col gap-3 mt-4 border-t border-white/10 pt-4">
             <p className="text-xs text-neutral-400 mb-1">
-              ¿Listo para contactar o revisar credenciales?
+              {t("recruiter.readyToContact")}
             </p>
 
             {/* CV Downloads */}
@@ -419,21 +427,21 @@ const RecruiterHub = () => {
                 download="Julian-Correa-CV-EN.pdf"
                 className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition"
               >
-                📥 CV English
+                {t("recruiter.downloadCvEn")}
               </a>
               <a
                 href={`${base}models/cv.pdf`}
                 download="Julian-Correa-CV-ES.pdf"
                 className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition"
               >
-                📥 CV Español
+                {t("recruiter.downloadCvEs")}
               </a>
             </div>
 
             {/* Preset Message Copy & Send */}
             <div className="flex flex-col gap-2 bg-midnight/40 rounded-lg p-2.5 border border-white/5">
               <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-semibold">
-                Mensaje generado dinámicamente:
+                {t("recruiter.generatedMessageLabel")}
               </span>
               <p className="text-[11px] text-neutral-300 italic line-clamp-2">
                 "{contactText}"
@@ -446,13 +454,13 @@ const RecruiterHub = () => {
                     : "bg-lavender text-white hover:bg-lavender/80"
                 }`}
               >
-                {isCopied ? "✓ Mensaje Copiado" : "📋 Copiar mensaje para Julián"}
+                {isCopied ? t("recruiter.copiedBtn") : t("recruiter.copyMessageBtn")}
               </button>
             </div>
 
             {/* Direct Channels */}
             <div className="flex justify-between items-center text-xs text-neutral-400 px-1 mt-1">
-              <span>Canales rápidos:</span>
+              <span>{t("recruiter.fastChannels")}</span>
               <div className="flex gap-4">
                 <a
                   href="mailto:julian.correa.556@unisabaneta.edu.co"
