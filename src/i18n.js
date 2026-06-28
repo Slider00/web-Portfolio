@@ -14,6 +14,7 @@ const resources = {
         about: "About",
         work: "Work",
         recruiterHub: "Recruiter Hub",
+        credentials: "Credentials",
         testimonials: "Testimonials",
         contact: "Contact",
         cv: "CV",
@@ -221,6 +222,11 @@ const resources = {
         placeholder: "Ask about Julian's projects, stack, or experience...",
         send: "Send",
         thinking: "Thinking..."
+      },
+      certifications: {
+        title: "Certifications & Credentials",
+        subtitle: "Official credentials and academic achievements demonstrating my technical expertise.",
+        verifyBtn: "Verify Credential"
       }
     }
   },
@@ -231,6 +237,7 @@ const resources = {
         about: "Sobre Mí",
         work: "Experiencia",
         recruiterHub: "Recruiter Hub",
+        credentials: "Certificaciones",
         testimonials: "Testimonios",
         contact: "Contacto",
         cv: "CV",
@@ -438,6 +445,11 @@ const resources = {
         placeholder: "Pregunta sobre los proyectos, stack o experiencia de Julián...",
         send: "Enviar",
         thinking: "Pensando..."
+      },
+      certifications: {
+        title: "Certificaciones y Títulos",
+        subtitle: "Títulos académicos y certificaciones oficiales que respaldan mi experiencia técnica.",
+        verifyBtn: "Verificar Credencial"
       }
     }
   }

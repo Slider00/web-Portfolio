@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { askPortfolioAI } from "../lib/portfolioAi";
+import { io } from "socket.io-client";
 
 const CONTACT_LINKS = {
   whatsapp: import.meta.env.VITE_WHATSAPP_URL || "",
@@ -54,19 +55,86 @@ const PortfolioAIChat = () => {
     { role: "assistant", content: t("aiChat.welcome") },
   ]);
   const scrollRef = useRef(null);
+  const socketRef = useRef(null);
+  const [liveMode, setLiveMode] = useState("ai");
+  const [isConnected, setIsConnected] = useState(false);
+
+  const getChatId = () => {
+    let id = localStorage.getItem("portfolio_chat_id");
+    if (!id) {
+      id = "session_" + Math.random().toString(36).substring(2, 11);
+      localStorage.setItem("portfolio_chat_id", id);
+    }
+    return id;
+  };
+
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_AI_API_URL || (import.meta.env.DEV ? "http://localhost:4000" : "");
+    if (!API_URL) return;
+
+    const socket = io(API_URL);
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      setIsConnected(true);
+      const chatId = getChatId();
+      socket.emit("join-chat", { chatId });
+    });
+
+    socket.on("disconnect", () => {
+      setIsConnected(false);
+    });
+
+    socket.on("live-chat-status", ({ mode }) => {
+      setLiveMode(mode);
+    });
+
+    socket.on("mensaje-servidor", ({ text, sender }) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: text,
+          sender: sender,
+        },
+      ]);
+      setLoading(false);
+
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const handleSend = async (presetMessage) => {
     const message = (presetMessage ?? input).trim();
     if (!message || loading) return;
 
     const nextMessages = [...messages, { role: "user", content: message }];
-    const nextHistory = nextMessages
-      .filter((m) => m.role === "user" || m.role === "assistant")
-      .map((m) => ({ role: m.role, content: m.content }));
     setMessages(nextMessages);
     if (!presetMessage) setInput("");
     setError("");
     setLoading(true);
+
+    // Si el socket está conectado, emitir el mensaje por WebSockets
+    if (socketRef.current && socketRef.current.connected) {
+      socketRef.current.emit("mensaje-cliente", {
+        chatId: getChatId(),
+        text: message,
+      });
+      return;
+    }
+
+    // Fallback HTTP si el servidor de sockets no está activo
+    const nextHistory = nextMessages
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({ role: m.role, content: m.content }));
 
     try {
       const data = await askPortfolioAI(message, nextHistory);
@@ -241,9 +309,37 @@ const PortfolioAIChat = () => {
             </button>
           </header>
 
+          {isConnected && (
+            liveMode === "ai" ? (
+              <div className="flex justify-between items-center bg-emerald-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-emerald-400 font-semibold">
+                <span>¿Quieres hablar conmigo en directo?</span>
+                <button
+                  onClick={() => {
+                    if (socketRef.current) {
+                      socketRef.current.emit("request-live-chat", { chatId: getChatId() });
+                    }
+                  }}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-black px-2 py-0.5 rounded font-bold cursor-pointer transition-colors animate-pulse"
+                >
+                  Chatear
+                </button>
+              </div>
+            ) : (
+              <div className="bg-indigo-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-neutral-300 font-semibold flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span>Chat en Vivo con Julián Activado</span>
+              </div>
+            )
+          )}
+
           <div
             ref={scrollRef}
-            className="h-[calc(100%-8.5rem)] overflow-y-auto px-3 py-3 space-y-3"
+            className={`overflow-y-auto px-3 py-3 space-y-3 ${
+              isConnected ? "h-[calc(100%-10.5rem)]" : "h-[calc(100%-8.5rem)]"
+            }`}
           >
             {messages.map((message, index) => (
               <article
@@ -254,6 +350,11 @@ const PortfolioAIChat = () => {
                     : "mr-auto bg-white/8 text-neutral-100"
                 }`}
               >
+                {message.sender && (
+                  <span className="block text-[9px] font-bold text-neutral-400 mb-0.5 tracking-wider uppercase">
+                    {message.sender}
+                  </span>
+                )}
                 <p>{message.content}</p>
                 {message.contact?.type === "whatsapp" && (
                   <a

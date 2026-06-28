@@ -227,9 +227,52 @@ export const reviews = [
     name: "Charlie", username: "@charlie", body: "reviews.charlie", img: "https://robohash.org/charlie",
   },
   {
-    name: "Dave", username: "@dave", body: "reviews.dave", img: "https://robohash.org/dave",
+    name: "Dave", username: "@dave", body: "Best decision I've made.", img: "https://robohash.org/dave",
   },
   {
-    name: "Eve", username: "@eve", body: "reviews.eve", img: "https://robohash.org/eve",
+    name: "Eve", username: "@eve", body: "Changed the game for me.", img: "https://robohash.org/eve",
+  },
+];
+
+export const certifications = [
+  {
+    id: 1,
+    title: "Front-End Web Developer",
+    issuer: "FreeCodeCamp / W3C",
+    date: "2023",
+    image: `${base}assets/certificates/frontend-fcc.png`,
+    link: "https://www.freecodecamp.org/certification/slider00/front-end-development-libraries",
+  },
+  {
+    id: 2,
+    title: "Flutter Mobile Developer",
+    issuer: "Google / App Brewery",
+    date: "2024",
+    image: `${base}assets/certificates/flutter-google.png`,
+    link: "https://www.udemy.com/certificate/UC-flutter-dart-development",
+  },
+  {
+    id: 3,
+    title: "ASP.NET Core & C# Services",
+    issuer: "Microsoft Learn",
+    date: "2024",
+    image: `${base}assets/certificates/dotnet-microsoft.png`,
+    link: "https://learn.microsoft.com/en-us/users/juliancorrea/credentials",
+  },
+  {
+    id: 4,
+    title: "WordPress Customizations Specialist",
+    issuer: "Udemy",
+    date: "2022",
+    image: `${base}assets/certificates/wordpress-theme.png`,
+    link: "https://www.udemy.com/certificate/UC-wordpress-theme-development",
+  },
+  {
+    id: 5,
+    title: "Scrum Foundation Professional",
+    issuer: "CertiProf",
+    date: "2025",
+    image: `${base}assets/certificates/scrum-certiprof.png`,
+    link: "https://certiprof.com/pages/scrum-foundation-professional-certificate-sfpc",
   },
 ];

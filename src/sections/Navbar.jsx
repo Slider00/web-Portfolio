@@ -24,6 +24,11 @@ function Navigation({ onNavigate }) {
               </a>
           </li>
           <li className="nav-li">
+              <a className="nav-link" href="#certifications" onClick={onNavigate}>
+                  {t('nav.credentials')}
+              </a>
+          </li>
+          <li className="nav-li">
               <a className="nav-link" href="#recruiter" onClick={onNavigate}>
                   {t('nav.recruiterHub')}
               </a>
