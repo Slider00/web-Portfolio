@@ -43,14 +43,51 @@ function Navigation({ onNavigate }) {
                   {t('nav.contact')}
               </a>
           </li>
-          <li className="nav-li">
+          {/* Desktop Dropdown */}
+          <li className="nav-li hidden sm:block relative group">
+              <span className="nav-link cursor-pointer flex items-center gap-1">
+                {t('nav.cv')}
+                <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+              <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-36 rounded-xl border border-white/10 bg-black/95 backdrop-blur-md shadow-2xl opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                <a
+                  className="block px-4 py-2.5 text-sm text-neutral-400 hover:text-white hover:bg-white/5 first:rounded-t-xl transition-colors"
+                  href={`${base}models/cv.pdf`}
+                  download="Julian-Correa-CV-ES.pdf"
+                >
+                  {t('nav.cvEs')}
+                </a>
+                <a
+                  className="block px-4 py-2.5 text-sm text-neutral-400 hover:text-white hover:bg-white/5 last:rounded-b-xl transition-colors"
+                  href={`${base}models/cv-en.pdf`}
+                  download="Julian-Correa-CV-EN.pdf"
+                >
+                  {t('nav.cvEn')}
+                </a>
+              </div>
+          </li>
+
+          {/* Mobile Links */}
+          <li className="nav-li sm:hidden">
               <a
                 className="nav-link"
-                href={i18n.language === "es" ? `${base}models/cv.pdf` : `${base}models/cv-en.pdf`}
-                download={i18n.language === "es" ? "Julian-Correa-CV-ES.pdf" : "Julian-Correa-CV-EN.pdf"}
+                href={`${base}models/cv.pdf`}
+                download="Julian-Correa-CV-ES.pdf"
                 onClick={onNavigate}
               >
-                {t('nav.cv')}
+                {t('nav.cvEs')}
+              </a>
+          </li>
+          <li className="nav-li sm:hidden">
+              <a
+                className="nav-link"
+                href={`${base}models/cv-en.pdf`}
+                download="Julian-Correa-CV-EN.pdf"
+                onClick={onNavigate}
+              >
+                {t('nav.cvEn')}
               </a>
           </li>
       </ul>

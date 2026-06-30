@@ -58,6 +58,7 @@ const PortfolioAIChat = () => {
   const socketRef = useRef(null);
   const [liveMode, setLiveMode] = useState("ai");
   const [isConnected, setIsConnected] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(() => localStorage.getItem("portfolio_chat_muted") === "true");
 
   const getChatId = () => {
     let id = localStorage.getItem("portfolio_chat_id");
@@ -66,6 +67,52 @@ const PortfolioAIChat = () => {
       localStorage.setItem("portfolio_chat_id", id);
     }
     return id;
+  };
+
+  const playNotificationSound = (isIncoming) => {
+    const isMuted = localStorage.getItem("portfolio_chat_muted") === "true";
+    if (isMuted) return;
+
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (isIncoming) {
+        // Tono ascendente de campana suave (Entrante)
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); // E5
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.35);
+      } else {
+        // Tono descendente tipo "pop" (Saliente)
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(146.83, ctx.currentTime + 0.08); // D3
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+      }
+    } catch (e) {
+      console.warn("Web Audio API bloqueada por la política del navegador.", e);
+    }
+  };
+
+  const toggleSound = () => {
+    setSoundMuted((prev) => {
+      const next = !prev;
+      localStorage.setItem("portfolio_chat_muted", String(next));
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -89,6 +136,13 @@ const PortfolioAIChat = () => {
       setLiveMode(mode);
     });
 
+    socket.on("chat-history", (history) => {
+      setMessages([
+        { role: "assistant", content: t("aiChat.welcome") },
+        ...history,
+      ]);
+    });
+
     socket.on("mensaje-servidor", ({ text, sender }) => {
       setMessages((prev) => [
         ...prev,
@@ -99,6 +153,7 @@ const PortfolioAIChat = () => {
         },
       ]);
       setLoading(false);
+      playNotificationSound(true);
 
       requestAnimationFrame(() => {
         if (scrollRef.current) {
@@ -118,6 +173,7 @@ const PortfolioAIChat = () => {
 
     const nextMessages = [...messages, { role: "user", content: message }];
     setMessages(nextMessages);
+    playNotificationSound(false);
     if (!presetMessage) setInput("");
     setError("");
     setLoading(true);
@@ -299,14 +355,33 @@ const PortfolioAIChat = () => {
         <aside className="fixed z-50 w-[min(92vw,24rem)] h-[70vh] max-h-[44rem] bottom-24 right-5 rounded-2xl border border-white/10 bg-primary/95 backdrop-blur-md shadow-2xl">
           <header className="flex items-center justify-between px-4 py-3 border-b border-white/10">
             <h3 className="text-sm font-semibold">Portfolio AI Assistant</h3>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="text-neutral-300 hover:text-white"
-              aria-label="Close AI assistant"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={toggleSound}
+                className="text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                title={soundMuted ? "Activar sonido" : "Silenciar"}
+              >
+                {soundMuted ? (
+                  <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                  </svg>
+                ) : (
+                  <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="text-neutral-300 hover:text-white"
+                aria-label="Close AI assistant"
+              >
+                ✕
+              </button>
+            </div>
           </header>
 
           {isConnected && (
@@ -325,12 +400,24 @@ const PortfolioAIChat = () => {
                 </button>
               </div>
             ) : (
-              <div className="bg-indigo-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-neutral-300 font-semibold flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span>Chat en Vivo con Julián Activado</span>
+              <div className="flex justify-between items-center bg-indigo-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-neutral-300 font-semibold">
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span>Chat en Vivo con Julián</span>
+                </div>
+                <button
+                  onClick={() => {
+                    if (socketRef.current) {
+                      socketRef.current.emit("exit-live-chat", { chatId: getChatId() });
+                    }
+                  }}
+                  className="bg-white/10 hover:bg-white/20 text-white px-2.5 py-0.5 rounded font-semibold text-[10px] cursor-pointer transition-colors"
+                >
+                  Volver a la IA
+                </button>
               </div>
             )
           )}
@@ -400,8 +487,12 @@ const PortfolioAIChat = () => {
               </article>
             ))}
             {loading && (
-              <article className="mr-auto rounded-xl px-3 py-2 text-sm bg-white/8 text-neutral-200">
-                {t("aiChat.thinking")}
+              <article className="mr-auto rounded-xl px-4 py-3 bg-white/8 text-neutral-200">
+                <div className="typing-dots flex items-center gap-1.5 h-3">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
               </article>
             )}
           </div>
