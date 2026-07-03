@@ -1,15 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "motion/react";
 import { certifications } from "../constants";
 
 const CertificateCard = ({ cert, onSelect }) => {
   const [imgError, setImgError] = useState(false);
+  const { t } = useTranslation();
+
+  if (cert.isComingSoon) {
+    return (
+      <div
+        className="relative flex flex-col justify-center items-center rounded-2xl border border-white/5 bg-midnight/50 backdrop-blur-md overflow-hidden select-none transition-all duration-300 h-full min-h-[280px] p-6 text-center opacity-65"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(122,87,219,0.08),transparent_70%)] pointer-events-none" />
+        <span className="text-4xl mb-3 filter drop-shadow-[0_0_8px_rgba(122,87,219,0.15)] select-none">🛠️</span>
+        <h3 className="text-sm font-semibold text-neutral-400 select-none">
+          {t("certifications.underConstruction")}
+        </h3>
+        <p className="text-[11px] text-neutral-500 mt-1 select-none">
+          Próxima certificación
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
       onClick={() => onSelect(cert)}
-      className="relative flex flex-col justify-between rounded-2xl border border-white/10 bg-midnight/90 backdrop-blur-md cursor-pointer overflow-hidden group select-none hover:border-white/20 transition-all duration-300"
+      className="relative flex flex-col justify-between rounded-2xl border border-white/10 bg-midnight/90 backdrop-blur-md cursor-pointer overflow-hidden group select-none hover:border-white/20 transition-all duration-300 h-full"
     >
       {/* Image container */}
       <div className="relative w-full h-48 overflow-hidden rounded-t-2xl bg-black/35 border-b border-white/5">
@@ -59,20 +77,144 @@ const CertificateCard = ({ cert, onSelect }) => {
 export default function Certifications() {
   const { t } = useTranslation();
   const [activeCert, setActiveCert] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setVisibleCount(3);
+      } else if (window.innerWidth >= 640) {
+        setVisibleCount(2);
+      } else {
+        setVisibleCount(1);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, certifications.length - visibleCount);
+  const safeIndex = Math.min(currentIndex, maxIndex);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
+  };
+
+  // Touch handlers for swipe support on mobile devices
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && safeIndex < maxIndex) {
+      handleNext();
+    }
+    if (isRightSwipe && safeIndex > 0) {
+      handlePrev();
+    }
+  };
+
+  // Generate pagination dots
+  const dots = [];
+  for (let i = 0; i <= maxIndex; i++) {
+    dots.push(i);
+  }
 
   return (
-    <section className="c-space section-spacing" id="certifications">
+    <section className="c-space mt-20 md:mt-30" id="certifications">
       <div>
         <h2 className="text-heading text-white">{t("certifications.title")}</h2>
         <p className="subtext mt-2">{t("certifications.subtitle")}</p>
       </div>
 
-      {/* Responsive Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-        {certifications.map((cert) => (
-          <CertificateCard key={cert.id} cert={cert} onSelect={setActiveCert} />
-        ))}
+      {/* Carousel Wrapper */}
+      <div className="relative w-full mt-12 px-0 sm:px-12 group/carousel">
+        {/* Left Arrow Button */}
+        <button
+          onClick={handlePrev}
+          disabled={safeIndex === 0}
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden sm:flex p-3 rounded-full border border-white/10 bg-midnight/80 backdrop-blur-md text-white hover:bg-white/15 hover:border-white/20 transition-all duration-300 disabled:opacity-20 disabled:pointer-events-none cursor-pointer hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+          aria-label="Anterior"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* Outer Clip Container */}
+        <div className="overflow-hidden w-full py-4 -my-4">
+          {/* Inner Sliding Track */}
+          <div
+            className="flex transition-transform duration-500 ease-out"
+            style={{
+              transform: `translateX(-${safeIndex * (100 / visibleCount)}%)`,
+            }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {certifications.map((cert) => (
+              <div
+                key={cert.id}
+                className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 px-3 py-1 h-full"
+              >
+                <CertificateCard cert={cert} onSelect={setActiveCert} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Arrow Button */}
+        <button
+          onClick={handleNext}
+          disabled={safeIndex >= maxIndex}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden sm:flex p-3 rounded-full border border-white/10 bg-midnight/80 backdrop-blur-md text-white hover:bg-white/15 hover:border-white/20 transition-all duration-300 disabled:opacity-20 disabled:pointer-events-none cursor-pointer hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+          aria-label="Siguiente"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
+
+      {/* Dot Indicators */}
+      {dots.length > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-8">
+          {dots.map((index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                index === safeIndex
+                  ? "w-6 bg-aqua"
+                  : "w-2 bg-white/20 hover:bg-white/40"
+              }`}
+              aria-label={`Ir a tarjeta ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Lightbox / Modal a pantalla completa */}
       <AnimatePresence>
@@ -163,3 +305,4 @@ export default function Certifications() {
     </section>
   );
 }
+

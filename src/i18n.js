@@ -48,15 +48,15 @@ const resources = {
         rights: "© 2025 Julian Correa. All rights reserved."
       },
       hero: {
-        wordSecure: "Secure",
-        wordModern: "Modern",
+        wordSecure: "Modern",
+        wordModern: "Efficient",
         wordScalable: "Scalable",
         greeting: "Hi, I'm Julian",
-        titleCraftingPart1: "A Developer",
-        titleCraftingPart2: "Dedicated to Crafting",
-        titleWebSolutions: "Web Solutions",
-        titleBuilding: "Building",
-        titleWebApps: "Web Applications"
+        titleCraftingPart1: "Full-Stack Developer",
+        titleCraftingPart2: "Focused on Creating",
+        titleWebSolutions: "Digital Experiences",
+        titleBuilding: "Creating",
+        titleWebApps: "Digital Experiences"
       },
       copyEmail: {
         copied: "Email has Copied",
@@ -226,7 +226,8 @@ const resources = {
       certifications: {
         title: "Certifications & Credentials",
         subtitle: "Official credentials and academic achievements demonstrating my technical expertise.",
-        verifyBtn: "Verify Credential"
+        verifyBtn: "Verify Credential",
+        underConstruction: "Under Construction"
       }
     }
   },
@@ -236,7 +237,7 @@ const resources = {
         home: "Inicio",
         about: "Sobre Mí",
         work: "Experiencia",
-        recruiterHub: "Recruiter Hub",
+        recruiterHub: "Centro de Reclutadores",
         credentials: "Certificaciones",
         testimonials: "Testimonios",
         contact: "Contacto",
@@ -271,15 +272,15 @@ const resources = {
         rights: "© 2025 Julian Correa. Todos los derechos reservados."
       },
       hero: {
-        wordSecure: "Seguro",
-        wordModern: "Moderno",
-        wordScalable: "Escalable",
+        wordSecure: "Modernas",
+        wordModern: "Eficientes",
+        wordScalable: "Escalables",
         greeting: "Hola, soy Julian",
-        titleCraftingPart1: "Un Desarrollador",
-        titleCraftingPart2: "Dedicado a Crear",
-        titleWebSolutions: "Soluciones Web",
-        titleBuilding: "Construyendo",
-        titleWebApps: "Aplicaciones Web"
+        titleCraftingPart1: "Desarrollador Full-Stack",
+        titleCraftingPart2: "Enfocado en Crear",
+        titleWebSolutions: "Experiencias Digitales",
+        titleBuilding: "Creando",
+        titleWebApps: "Experiencias Digitales"
       },
       copyEmail: {
         copied: "Correo Copiado",
@@ -379,7 +380,7 @@ const resources = {
         eve: "Cambió el juego para mí."
       },
       recruiter: {
-        title: "Recruiter Hub",
+        title: "Centro de Reclutadores",
         subtitle: "Simula las necesidades de tu vacante y analiza mi compatibilidad y perfil en tiempo real.",
         availableBadge: "Disponible para Entrevistas",
         configureTitle: "⚙️ Configura tu Vacante",
@@ -449,7 +450,8 @@ const resources = {
       certifications: {
         title: "Certificaciones y Títulos",
         subtitle: "Títulos académicos y certificaciones oficiales que respaldan mi experiencia técnica.",
-        verifyBtn: "Verificar Credencial"
+        verifyBtn: "Verificar Credencial",
+        underConstruction: "En construcción"
       }
     }
   }
