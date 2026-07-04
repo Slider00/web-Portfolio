@@ -25,8 +25,8 @@ const resources = {
         title: "About Me",
         name: "Hi, I'm Julian Correa",
         bio: "For the past four and a half years, I have honed my frontend development skills, building dynamic web and mobile application solutions.",
-        timezoneTitle: "Time Zone",
-        timezoneSub: "I'm based in Mars, and open to remote work worldwide",
+        timezoneTitle: "Location & Global Activity",
+        timezoneSub: "Based in Medellín, Colombia (UTC-5), open to remote work worldwide. The 3D globe displays live global seismic activity in real-time.",
         collaborationTitle: "Do you want to start a project together?",
         techstackTitle: "Tech Stack",
         techstackSub: "I specialize in a variety of languages, frameworks, and tools that allow me to build robust and scalable applications"
@@ -249,8 +249,8 @@ const resources = {
         title: "Sobre Mí",
         name: "Hola, soy Julian Correa",
         bio: "Durante los últimos cuatro años y medio, he perfeccionado mis habilidades de desarrollo frontend, creando soluciones dinámicas para aplicaciones web y móviles.",
-        timezoneTitle: "Zona Horaria",
-        timezoneSub: "Vivo en Marte y estoy disponible para trabajo remoto en todo el mundo",
+        timezoneTitle: "Ubicación y Actividad Global",
+        timezoneSub: "Establecido en Medellín, Colombia (UTC-5) con disponibilidad remota global. El globo 3D refleja sismicidad mundial en tiempo real.",
         collaborationTitle: "¿Quieres que empecemos un proyecto juntos?",
         techstackTitle: "Stack Tecnológico",
         techstackSub: "Me especializo en una variedad de lenguajes, frameworks y herramientas que me permiten construir aplicaciones robustas y escalables"
