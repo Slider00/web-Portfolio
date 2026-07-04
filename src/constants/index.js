@@ -172,6 +172,33 @@ export const myProjects = [
       { id: 2, name: "MySQL", path: `${base}assets/logos/sqlite.svg` },
     ],
   },
+  {
+    id: 10,
+    title: "projects.fia.title",
+    description: "projects.fia.description",
+    subDescription: [
+      "projects.fia.subDescription0",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/fia-1.jpg`,
+    images: [
+      `${base}assets/projects/video_fia.mp4`,
+      `${base}assets/projects/fia-1.jpg`,
+      `${base}assets/projects/fia-2.jpg`,
+      `${base}assets/projects/fia-3.jpg`,
+      `${base}assets/projects/fia-4.jpg`,
+      `${base}assets/projects/fia-5.jpg`,
+      `${base}assets/projects/fia-6.jpg`,
+    ],
+    tags: [
+      { id: 1, name: "Flutter", path: `${base}assets/logos/flutter.svg` },
+      { id: 2, name: "Dart", path: `${base}assets/logos/dart.svg` },
+      { id: 3, name: "Node.js", path: `${base}assets/logos/nodejs.svg` },
+      { id: 4, name: "NestJS", path: `${base}assets/logos/nestjs.svg` },
+      { id: 5, name: "MongoDB", path: `${base}assets/logos/mongodb.svg` },
+    ],
+  },
 ];
 
 export const mySocials = [

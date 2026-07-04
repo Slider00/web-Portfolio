@@ -120,6 +120,11 @@ const resources = {
           title: "SaaS-based POS System",
           description: "Backend-oriented system for secure data management workflows.",
           subDescription0: "Developed PHP services and relational data structures for business operations."
+        },
+        fia: {
+          title: "FiA - Health & Wellness Social Network",
+          description: "A specialized mobile social network connecting users with health, beauty, and wellness professionals. Features customized communities, private messaging, aesthetic content feeds, and professional profile management.",
+          subDescription0: "Built a cross-platform mobile application with Flutter and Dart, backed by a scalable microservices architecture using NestJS, Node.js, and MongoDB."
         }
       },
       experiences: {
@@ -344,6 +349,11 @@ const resources = {
           title: "Sistema POS basado en SaaS",
           description: "Backend-oriented system for secure data management workflows.",
           subDescription0: "Developed PHP services and relational data structures for business operations."
+        },
+        fia: {
+          title: "FiA - Red Social de Salud y Bienestar",
+          description: "Una red social móvil especializada que conecta a usuarios con profesionales de la salud, la belleza y el bienestar. Incluye comunidades personalizadas, mensajería privada, feeds de contenido estético y gestión de perfiles profesionales.",
+          subDescription0: "Desarrollada como aplicación móvil multiplataforma con Flutter y Dart, respaldada por una arquitectura de microservicios escalable utilizando NestJS, Node.js y MongoDB."
         }
       },
       experiences: {

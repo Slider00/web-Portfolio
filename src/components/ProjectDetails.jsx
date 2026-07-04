@@ -32,12 +32,23 @@ const ProjectDetails = ({
         >
           <img src={`${import.meta.env.BASE_URL}assets/close.svg`} className="w-6 h-6" alt="close icon" />
         </button>
-        <div className="w-full rounded-t-2xl max-h-96 bg-black/25">
-          <img
-            src={activeImage}
-            alt={title}
-            className="object-contain w-full rounded-t-2xl max-h-96"
-          />
+        <div className="w-full rounded-t-2xl max-h-96 bg-black/25 flex justify-center items-center">
+          {activeImage.endsWith(".mp4") ? (
+            <video
+              src={activeImage}
+              controls
+              className="object-contain w-full rounded-t-2xl max-h-96"
+              autoPlay
+              muted
+              playsInline
+            />
+          ) : (
+            <img
+              src={activeImage}
+              alt={title}
+              className="object-contain w-full rounded-t-2xl max-h-96"
+            />
+          )}
         </div>
         {gallery.length > 1 && (
           <div className="flex gap-2 px-5 pt-4">
@@ -45,9 +56,20 @@ const ProjectDetails = ({
               <button
                 key={`${img}-${index}`}
                 onClick={() => setActiveImage(img)}
-                className={`overflow-hidden border rounded-md size-16 ${activeImage === img ? "border-aqua" : "border-white/15"}`}
+                className={`overflow-hidden border rounded-md size-16 flex items-center justify-center bg-black/20 relative ${
+                  activeImage === img ? "border-aqua" : "border-white/15"
+                }`}
               >
-                <img src={img} alt={`${title}-${index + 1}`} className="object-contain w-full h-full bg-black/20" />
+                {img.endsWith(".mp4") ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-900 text-white relative">
+                    <span className="text-xl">📹</span>
+                    <span className="absolute bottom-0 inset-x-0 text-[8px] bg-black/70 py-0.5 rounded text-neutral-300 font-bold uppercase tracking-wider text-center">
+                      Video
+                    </span>
+                  </div>
+                ) : (
+                  <img src={img} alt={`${title}-${index + 1}`} className="object-contain w-full h-full" />
+                )}
               </button>
             ))}
           </div>
