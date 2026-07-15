@@ -199,6 +199,35 @@ export const myProjects = [
       { id: 5, name: "MongoDB", path: `${base}assets/logos/mongodb.svg` },
     ],
   },
+  {
+    id: 11,
+    title: "projects.wompi.title",
+    description: "projects.wompi.description",
+    subDescription: [
+      "projects.wompi.subDescription0",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/wompi1.jpeg`,
+    images: [
+      `${base}assets/projects/wompi1.jpeg`,
+      `${base}assets/projects/wompi2.jpeg`,
+      `${base}assets/projects/wompi3.jpeg`,
+      `${base}assets/projects/wompi4.jpeg`,
+      `${base}assets/projects/wompi5.jpeg`,
+      `${base}assets/projects/wompi6.jpeg`,
+      `${base}assets/projects/wompi7.jpeg`,
+      `${base}assets/projects/wompi8.jpeg`,
+      `${base}assets/projects/wompi9.jpeg`,
+      `${base}assets/projects/wompi10.jpeg`,
+    ],
+    tags: [
+      { id: 1, name: "React Native", path: `${base}assets/logos/react.svg` },
+      { id: 2, name: "Next.js", path: `${base}assets/logos/nextjs.svg` },
+      { id: 3, name: "MongoDB", path: `${base}assets/logos/mongodb.svg` },
+      { id: 4, name: "Swagger", path: `${base}assets/logos/swagger.svg` },
+    ],
+  },
 ];
 
 export const mySocials = [

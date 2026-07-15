@@ -125,6 +125,11 @@ const resources = {
           title: "FiA - Health & Wellness Social Network",
           description: "A specialized mobile social network connecting users with health, beauty, and wellness professionals. Features customized communities, private messaging, aesthetic content feeds, and professional profile management.",
           subDescription0: "Built a cross-platform mobile application with Flutter and Dart, backed by a scalable microservices architecture using NestJS, Node.js, and MongoDB."
+        },
+        wompi: {
+          title: "Wompi Credit Card Payment Gateway",
+          description: "Mobile application implementing a payment gateway by integrating with Wompi, allowing users to process secure credit card transactions (tokenization, accepting Wompi terms, and transaction signatures) and query payment status in real-time.",
+          subDescription0: "Developed as a mobile application with React Native, connected to a Next.js backend to securely interact with the Wompi API, MongoDB database for storing transaction history, and Swagger for exposing and documenting backend services."
         }
       },
       experiences: {
@@ -354,6 +359,11 @@ const resources = {
           title: "FiA - Red Social de Salud y Bienestar",
           description: "Una red social móvil especializada que conecta a usuarios con profesionales de la salud, la belleza y el bienestar. Incluye comunidades personalizadas, mensajería privada, feeds de contenido estético y gestión de perfiles profesionales.",
           subDescription0: "Desarrollada como aplicación móvil multiplataforma con Flutter y Dart, respaldada por una arquitectura de microservicios escalable utilizando NestJS, Node.js y MongoDB."
+        },
+        wompi: {
+          title: "Pasarela de Pagos Wompi con Tarjeta de Crédito",
+          description: "Aplicación móvil que implementa una pasarela de pagos mediante la integración con Wompi, permitiendo procesar transacciones seguras con tarjeta de crédito (tokenización, aceptación de términos de Wompi y firma de transacciones) y consultar el estado del pago en tiempo real.",
+          subDescription0: "Desarrollada como aplicación móvil con React Native, conectada a un backend en Next.js para interactuar de forma segura con la API de Wompi, base de datos MongoDB para almacenar el historial de transacciones y Swagger para exponer y documentar los servicios del backend."
         }
       },
       experiences: {
