@@ -228,6 +228,41 @@ export const myProjects = [
       { id: 4, name: "Swagger", path: `${base}assets/logos/swagger.svg` },
     ],
   },
+  {
+    id: 12,
+    title: "projects.weedShop.title",
+    description: "projects.weedShop.description",
+    subDescription: [
+      "projects.weedShop.subDescription0",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/weed-2.png`,
+    images: [
+      `${base}assets/projects/weed.mp4`,
+      `${base}assets/projects/weed-1.png`,
+      `${base}assets/projects/weed-2.png`,
+      `${base}assets/projects/weed-3.png`,
+      `${base}assets/projects/weed-4.png`,
+      `${base}assets/projects/weed-5.png`,
+      `${base}assets/projects/weed-6.png`,
+      `${base}assets/projects/weed-7.png`,
+      `${base}assets/projects/weed-8.png`,
+      `${base}assets/projects/weed-9.png`,
+      `${base}assets/projects/weed-10.png`,
+      `${base}assets/projects/weed-11.png`,
+      `${base}assets/projects/weed-12.png`,
+      `${base}assets/projects/weed-13.png`,
+    ],
+    tags: [
+      { id: 1, name: "React", path: `${base}assets/logos/react.svg` },
+      { id: 2, name: "Next.js", path: `${base}assets/logos/nextjs.svg` },
+      { id: 3, name: "TailwindCSS", path: `${base}assets/logos/tailwindcss.svg` },
+      { id: 4, name: "NestJS", path: `${base}assets/logos/nestjs.svg` },
+      { id: 5, name: "MongoDB", path: `${base}assets/logos/mongodb.svg` },
+      { id: 6, name: "Swagger", path: `${base}assets/logos/swagger.svg` },
+    ],
+  },
 ];
 
 export const mySocials = [
