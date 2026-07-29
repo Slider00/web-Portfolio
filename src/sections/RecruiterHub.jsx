@@ -22,15 +22,15 @@ ChartJS.register(
 );
 
 const SKILLS_LIST = [
-  { id: "react", name: "React.js / Vite", category: "Frontend" },
+  { id: "react", name: "React.js / Next.js", category: "Frontend" },
   { id: "javascript", name: "JS / TypeScript", category: "Frontend" },
-  { id: "tailwindcss", name: "Tailwind CSS", category: "Frontend" },
+  { id: "tailwindcss", name: "Tailwind CSS / Sass", category: "Frontend" },
   { id: "flutter", name: "Flutter / Dart", category: "Mobile" },
-  { id: "ionic", name: "Ionic Framework", category: "Mobile" },
-  { id: "csharp", name: "C# / Blazor", category: "Backend" },
-  { id: "dotnet", name: ".NET / EF Core", category: "Backend" },
-  { id: "php", name: "PHP / WordPress", category: "Backend" },
-  { id: "git", name: "Git / CI-CD", category: "Herramientas" },
+  { id: "reactnative", name: "React Native / Expo", category: "Mobile" },
+  { id: "nestjs", name: "NestJS / Node.js", category: "Backend" },
+  { id: "mongodb", name: "MongoDB / Mongoose", category: "Backend" },
+  { id: "php", name: "PHP / REST APIs", category: "Backend" },
+  { id: "git", name: "Git / Pipelines CI-CD", category: "Herramientas" },
 ];
 
 const PRESETS = {
@@ -42,13 +42,13 @@ const PRESETS = {
   },
   mobile: {
     nameKey: "recruiter.presetMobile",
-    skills: ["flutter", "javascript", "ionic", "git"],
+    skills: ["flutter", "javascript", "reactnative", "git"],
     experience: "mid",
     mode: "remote",
   },
   fullstack: {
     nameKey: "recruiter.presetFullstack",
-    skills: ["react", "javascript", "tailwindcss", "csharp", "dotnet", "git"],
+    skills: ["react", "javascript", "tailwindcss", "nestjs", "mongodb", "git"],
     experience: "senior",
     mode: "remote",
   },
@@ -96,9 +96,9 @@ const RecruiterHub = () => {
     const totalSkillsSelected = selectedSkills.length;
 
     if (totalSkillsSelected > 0) {
-      // Julian es fuerte en Frontend, Mobile y .NET/C#
+      // Julian is proficient in all skills listed on his CV
       const coreMatches = selectedSkills.filter((s) =>
-        ["react", "javascript", "tailwindcss", "flutter", "csharp", "dotnet"].includes(s)
+        ["react", "javascript", "tailwindcss", "flutter", "reactnative", "nestjs", "mongodb", "php", "git"].includes(s)
       );
       score += (coreMatches.length / totalSkillsSelected) * 35;
       score += Math.min(totalSkillsSelected * 2, 5);
