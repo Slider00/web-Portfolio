@@ -54,14 +54,14 @@ function Navigation({ onNavigate }) {
               <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-36 rounded-xl border border-white/10 bg-black/95 backdrop-blur-md shadow-2xl opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-200 z-50">
                 <a
                   className="block px-4 py-2.5 text-sm text-neutral-400 hover:text-white hover:bg-white/5 first:rounded-t-xl transition-colors"
-                  href={`${base}models/cv.pdf`}
+                  href={`${base}assets/CV Julian es.pdf`}
                   download="Julian-Correa-CV-ES.pdf"
                 >
                   {t('nav.cvEs')}
                 </a>
                 <a
                   className="block px-4 py-2.5 text-sm text-neutral-400 hover:text-white hover:bg-white/5 last:rounded-b-xl transition-colors"
-                  href={`${base}models/cv-en.pdf`}
+                  href={`${base}assets/CV Julian en.pdf`}
                   download="Julian-Correa-CV-EN.pdf"
                 >
                   {t('nav.cvEn')}
@@ -73,7 +73,7 @@ function Navigation({ onNavigate }) {
           <li className="nav-li sm:hidden">
               <a
                 className="nav-link"
-                href={`${base}models/cv.pdf`}
+                href={`${base}assets/CV Julian es.pdf`}
                 download="Julian-Correa-CV-ES.pdf"
                 onClick={onNavigate}
               >
@@ -83,7 +83,7 @@ function Navigation({ onNavigate }) {
           <li className="nav-li sm:hidden">
               <a
                 className="nav-link"
-                href={`${base}models/cv-en.pdf`}
+                href={`${base}assets/CV Julian en.pdf`}
                 download="Julian-Correa-CV-EN.pdf"
                 onClick={onNavigate}
               >

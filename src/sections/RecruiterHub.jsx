@@ -423,14 +423,14 @@ const RecruiterHub = () => {
             {/* CV Downloads */}
             <div className="grid grid-cols-2 gap-3">
               <a
-                href={`${base}models/cv-en.pdf`}
+                href={`${base}assets/CV Julian en.pdf`}
                 download="Julian-Correa-CV-EN.pdf"
                 className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition"
               >
                 {t("recruiter.downloadCvEn")}
               </a>
               <a
-                href={`${base}models/cv.pdf`}
+                href={`${base}assets/CV Julian es.pdf`}
                 download="Julian-Correa-CV-ES.pdf"
                 className="flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs font-semibold py-2.5 px-4 rounded-lg transition"
               >
