@@ -24,7 +24,7 @@ const resources = {
       about: {
         title: "About Me",
         name: "Hi, I'm Julian Correa",
-        bio: "For the past four and a half years, I have honed my frontend development skills, building dynamic web and mobile application solutions.",
+        bio: "As a Senior Front-End Developer with over 6 years of experience, I specialize in building scalable, high-performance web and mobile applications using React, Next.js, Flutter, and React Native, backed by Node.js and NestJS.",
         timezoneTitle: "Location & Global Activity",
         timezoneSub: "Based in Medellín, Colombia (UTC-5), open to remote work worldwide. The 3D globe displays live global seismic activity in real-time.",
         collaborationTitle: "Do you want to start a project together?",
@@ -263,7 +263,7 @@ const resources = {
       about: {
         title: "Sobre Mí",
         name: "Hola, soy Julian Correa",
-        bio: "Durante los últimos cuatro años y medio, he perfeccionado mis habilidades de desarrollo frontend, creando soluciones dinámicas para aplicaciones web y móviles.",
+        bio: "Como Desarrollador Front-End Senior con más de 6 años de experiencia, me especializo en construir aplicaciones web y móviles escalables y de alto rendimiento utilizando React, Next.js, Flutter y React Native, respaldadas por Node.js y NestJS.",
         timezoneTitle: "Ubicación y Actividad Global",
         timezoneSub: "Establecido en Medellín, Colombia (UTC-5) con disponibilidad remota global. El globo 3D refleja sismicidad mundial en tiempo real.",
         collaborationTitle: "¿Quieres que empecemos un proyecto juntos?",

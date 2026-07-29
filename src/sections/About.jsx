@@ -4,7 +4,7 @@ import { Globe } from "../components/globe";
 import CopyEmailButton from "../components/CopyEmailButton";
 import { Frameworks } from "../components/Frameworks.jsx";
 import CyberSecurityPanel from "../components/CyberSecurityPanel";
-import TerminalPreview from "../components/TerminalPreview";
+import GitMerger from "../components/GitMerger";
 
 const cleanPlaceName = (place, isEs) => {
   if (!place) return "";
@@ -87,9 +87,9 @@ const About = () => {
     <section className="c-space section-spacing" id="about">
       <h2 className="text-heading">{t("about.title")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-[18rem] mt-12">
-        <div className="flex items-end h-[30rem] md:h-full grid-default-color grid-1">
-          <div className="absolute top-4 left-4 right-4 bottom-44 md:bottom-36">
-            <TerminalPreview />
+        <div className="flex items-end h-[38rem] md:h-full grid-default-color grid-1">
+          <div className="absolute top-4 left-4 right-4 bottom-60 md:bottom-48">
+            <GitMerger />
           </div>
           <div className="z-10">
             <p className="headtext">{t("about.name")}</p>
@@ -103,35 +103,37 @@ const About = () => {
           <CyberSecurityPanel />
         </div>
         {/* Grid 3 */}
-        <div className="grid-black-color grid-3">
-          <div className="z-10 w-[65%] sm:w-[50%]">
-            <p className="headtext">{t("about.timezoneTitle")}</p>
-            <p className="subtext">
-              {t("about.timezoneSub")}
+        <div className="h-[18rem] md:h-full grid-black-color grid-3 p-4 flex flex-row items-center justify-between gap-4">
+          <div className="w-[55%] flex flex-col justify-center min-w-0 z-10 select-none">
+            <h3 className="text-neutral-200 text-[11px] md:text-[13px] font-bold font-sans tracking-wide leading-tight mb-0.5">
+              {isEs ? "Geolocalización y Actividad Sísmica" : "Geolocation & Seismic Activity"}
+            </h3>
+            <p className="text-[7.5px] md:text-[8px] text-neutral-500 font-semibold mb-3 tracking-wide leading-3 uppercase">
+              {isEs ? "Medellín, Colombia • Sismos Globales" : "Medellín, Colombia • Global Seismicity"}
             </p>
-
-            {/* List of strongest earthquakes */}
-            {recentQuakes.length > 0 && (
-              <div className="mt-4 border-t border-white/5 pt-3">
-                <span className="text-[9px] font-bold text-rose-400 uppercase tracking-widest block mb-1.5 flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
-                  {isEs ? "Sismos Más Fuertes (Últimas 24h)" : "Strongest Earthquakes (Last 24h)"}
-                </span>
-                <ul className="space-y-1 text-[10px] text-neutral-400">
-                  {recentQuakes.map((quake, i) => (
-                    <li key={i} className="truncate hover:text-white transition-colors" title={`Magnitude ${quake.mag}: ${quake.place}`}>
-                      <strong className="text-rose-400 font-mono">M {quake.mag.toFixed(1)}</strong>
-                      <span className="mx-1">•</span>
-                      <span>{quake.place}</span>
-                    </li>
-                  ))}
-                </ul>
+            <span className="text-[9px] md:text-[10px] font-bold text-rose-500 uppercase tracking-widest block mb-2.5 flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
+              {isEs ? "Sismos Más Fuertes (24h)" : "Strongest Earthquakes (24h)"}
+            </span>
+            {recentQuakes.length > 0 ? (
+              <ul className="space-y-1.5 text-[9px] md:text-[9.5px] text-neutral-400 font-medium">
+                {recentQuakes.slice(0, 5).map((quake, i) => (
+                  <li key={i} className="truncate hover:text-white transition-colors" title={`Magnitude ${quake.mag}: ${quake.place}`}>
+                    <strong className="text-rose-400 font-mono">M {quake.mag.toFixed(1)}</strong>
+                    <span className="mx-1 text-neutral-600">•</span>
+                    <span>{cleanPlaceName(quake.place, isEs)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-[9px] text-neutral-500 italic animate-pulse">
+                {isEs ? "Consultando datos de USGS..." : "Querying USGS data..."}
               </div>
             )}
           </div>
-          <figure className="absolute pointer-events-none -right-10 -bottom-16 sm:bottom-[-4.5rem] sm:right-[-3rem] md:left-[36%] md:top-[14%]">
+          <div className="w-[45%] h-full flex items-center justify-center relative overflow-hidden pointer-events-auto">
             <Globe markers={globeMarkers} labels={globeLabels} />
-          </figure>
+          </div>
         </div>
         {/* Grid 4 */}
         <div className="grid-special-color grid-4">

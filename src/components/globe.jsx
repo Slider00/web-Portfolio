@@ -146,7 +146,7 @@ export function Globe({ className, config = GLOBE_CONFIG, markers, labels }) {
         className
       )}
     >
-      <div className="relative size-[16rem] sm:size-[20rem] md:size-[24rem] lg:size-[26rem]">
+      <div className="relative w-full h-full max-w-[14rem] max-h-[14rem] sm:max-w-[15.5rem] sm:max-h-[15.5rem] md:max-w-[17.5rem] md:max-h-[17.5rem] lg:max-w-[18.5rem] lg:max-h-[18.5rem] aspect-square flex items-center justify-center">
         <canvas
           className="w-full h-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size] pointer-events-auto cursor-grab"
           ref={canvasRef}
@@ -177,7 +177,7 @@ export function Globe({ className, config = GLOBE_CONFIG, markers, labels }) {
       </div>
       
       {/* Pulsing dynamic real-time badge */}
-      <div className="absolute bottom-16 sm:bottom-0 left-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/5 bg-black/60 backdrop-blur-md text-[9px] font-semibold text-neutral-400 select-none shadow-md">
+      <div className="hidden sm:flex absolute bottom-2 left-2 z-10 flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-white/5 bg-black/60 backdrop-blur-md text-[8px] md:text-[9px] font-semibold text-neutral-400 select-none shadow-md">
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
