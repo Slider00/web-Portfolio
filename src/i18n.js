@@ -132,7 +132,7 @@ const resources = {
           subDescription0: "Developed as a mobile application with React Native, connected to a Next.js backend to securely interact with the Wompi API, MongoDB database for storing transaction history, and Swagger for exposing and documenting backend services."
         },
         trackingShop: {
-          title: "Virtual Store & Real-Time Tracking",
+          title: "Virtual Store Shop & Real-Time Order Tracking",
           description: "An interactive, modern e-commerce platform with real-time order tracking, built with a robust architecture and fully documented APIs.",
           subDescription0: "Developed using React, Next.js, and Tailwind CSS for a premium user interface, integrated with a NestJS backend connected to MongoDB, and fully documented using Swagger."
         }
@@ -371,7 +371,7 @@ const resources = {
           subDescription0: "Desarrollada como aplicación móvil con React Native, conectada a un backend en Next.js para interactuar de forma segura con la API de Wompi, base de datos MongoDB para almacenar el historial de transacciones y Swagger para exponer y documentar los servicios del backend."
         },
         trackingShop: {
-          title: "Tienda Virtual & Rastreo en Tiempo Real",
+          title: "Tienda Virtual Shop & Rastreo de Pedido en Tiempo Real",
           description: "Una plataforma interactiva y moderna de comercio electrónico con rastreo de pedidos en tiempo real, construida con una arquitectura robusta y APIs completamente documentadas.",
           subDescription0: "Desarrollada utilizando React, Next.js y Tailwind CSS para una interfaz de usuario premium, integrada con un backend en NestJS conectado a MongoDB, y completamente documentada mediante Swagger."
         }
