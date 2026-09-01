@@ -135,6 +135,13 @@ const resources = {
           title: "Virtual Store Shop & Real-Time Order Tracking",
           description: "An interactive, modern e-commerce platform with real-time order tracking, built with a robust architecture and fully documented APIs.",
           subDescription0: "Developed using React, Next.js, and Tailwind CSS for a premium user interface, integrated with a NestJS backend connected to MongoDB, and fully documented using Swagger."
+        },
+        gisEmergency: {
+          title: "GIS Emergency Logistics Management Portal",
+          description: "Reactive Geographic Information System (GIS) for real-time emergency management and disaster supply logistics during earthquakes.",
+          subDescription0: "Automatic real-time background synchronization of seismic events from the official USGS (US Geological Survey) feed for Colombia, rendered with dynamic magnitude pulse animations on the interactive map.",
+          subDescription1: "Citizen and rescue team reporting via map double-click, opening precise forms to register affected people, damaged infrastructure, and required emergency supplies.",
+          subDescription2: "Automated Red Cross supply computation algorithms (5L water/day, 2 meals/day, 1 family tent & hygiene kit per 4 people) with national consolidated disaster dashboard tracking real-time delivery progress."
         }
       },
       experiences: {
@@ -374,6 +381,13 @@ const resources = {
           title: "Tienda Virtual Shop & Rastreo de Pedido en Tiempo Real",
           description: "Una plataforma interactiva y moderna de comercio electrónico con rastreo de pedidos en tiempo real, construida con una arquitectura robusta y APIs completamente documentadas.",
           subDescription0: "Desarrollada utilizando React, Next.js y Tailwind CSS para una interfaz de usuario premium, integrada con un backend en NestJS conectado a MongoDB, y completamente documentada mediante Swagger."
+        },
+        gisEmergency: {
+          title: "Portal Geográfico de Gestión Logística en Emergencias (SIG Reactivo)",
+          description: "Sistema de Información Geográfica (SIG) reactivo para la gestión logística en emergencias y distribución automatizada de ayuda humanitaria ante desastres sísmicos.",
+          subDescription0: "Sincronización automática de sismos en segundo plano desde el feed oficial de la USGS (Servicio Geológico de EE. UU.) para Colombia y datos locales de prueba, representados en el mapa con marcadores animados de ondas sísmicas según la gravedad de su magnitud.",
+          subDescription1: "Creación de reportes ciudadanos y de organismos de rescate (Defensa Civil, Bomberos, Cruz Roja) mediante doble clic en el mapa para registrar damnificados, viviendas afectadas y necesidades en terreno.",
+          subDescription2: "Cómputo automático de suministros mediante algoritmos basados en proporciones de la Cruz Roja (5L agua/día, 2 raciones comida/día, 1 carpa y kit de higiene por cada 4 personas), junto a un tablero de consolidado nacional que rastrea la ayuda entregada en tiempo real."
         }
       },
       experiences: {

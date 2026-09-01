@@ -268,6 +268,30 @@ export const myProjects = [
       { id: 6, name: "Swagger", path: `${base}assets/logos/swagger.svg` },
     ],
   },
+  {
+    id: 13,
+    title: "projects.gisEmergency.title",
+    description: "projects.gisEmergency.description",
+    subDescription: [
+      "projects.gisEmergency.subDescription0",
+      "projects.gisEmergency.subDescription1",
+      "projects.gisEmergency.subDescription2",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/sig-emergencias-1.png`,
+    images: [
+      `${base}assets/projects/sig-emergencias.mp4`,
+      `${base}assets/projects/sig-emergencias-1.png`,
+      `${base}assets/projects/sig-emergencias-2.png`,
+    ],
+    tags: [
+      { id: 1, name: "React / Next.js", path: `${base}assets/logos/nextjs.svg` },
+      { id: 2, name: "TypeScript", path: `${base}assets/logos/typescript.svg` },
+      { id: 3, name: "TailwindCSS", path: `${base}assets/logos/tailwindcss.svg` },
+      { id: 4, name: "Node.js", path: `${base}assets/logos/nodejs.svg` },
+    ],
+  },
 ];
 
 export const mySocials = [

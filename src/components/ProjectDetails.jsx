@@ -43,7 +43,7 @@ const ProjectDetails = ({
         <div className="overflow-y-auto w-full flex-1 scrollbar-thin">
           {/* Main Media View (Image or Video) */}
           <div className="w-full rounded-t-2xl max-h-80 sm:max-h-96 bg-black/25 flex justify-center items-center overflow-hidden border-b border-white/5">
-            {activeImage.endsWith(".mp4") ? (
+            {activeImage.endsWith(".mp4") || activeImage.endsWith(".mov") || activeImage.endsWith(".webm") ? (
               <video
                 src={activeImage}
                 controls
@@ -72,7 +72,7 @@ const ProjectDetails = ({
                     activeImage === img ? "border-aqua scale-105" : "border-white/15 opacity-70 hover:opacity-100"
                   }`}
                 >
-                  {img.endsWith(".mp4") ? (
+                  {img.endsWith(".mp4") || img.endsWith(".mov") || img.endsWith(".webm") ? (
                     <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-900 text-white relative">
                       <span className="text-lg">📹</span>
                       <span className="absolute bottom-0 inset-x-0 text-[7px] sm:text-[8px] bg-black/70 py-0.5 rounded text-neutral-300 font-bold uppercase tracking-wider text-center">
