@@ -241,7 +241,7 @@ const resources = {
         contactWhatsapp: "Chat on WhatsApp",
         errorConn: "Connection issue with AI backend. Please try again.",
         errorReach: "I cannot reach the AI service right now. Please retry in a moment.",
-        placeholder: "Ask about Julian's projects, stack, or experience...",
+        placeholder: "Type your message here...",
         send: "Send",
         thinking: "Thinking..."
       },
@@ -250,6 +250,40 @@ const resources = {
         subtitle: "Official credentials and academic achievements demonstrating my technical expertise.",
         verifyBtn: "Verify Credential",
         underConstruction: "Under Construction"
+      },
+      jarvis: {
+        activateBtn: "Activate Jarvis Assistant",
+        greeting: "Greetings. I am Jarvis, Julian's AI assistant. I am ready to guide you through his portfolio, show his projects, or connect you directly with him.",
+        statusIdle: "Jarvis Standby",
+        statusListening: "Listening to voice input...",
+        statusThinking: "Processing command...",
+        statusExecuting: "Executing action...",
+        micNotSupported: "Speech recognition is not supported in this browser.",
+        micBlocked: "Microphone access blocked. Please allow permission.",
+        pills: {
+          projects: "📁 Show Projects",
+          experience: "💼 Work Experience",
+          downloadCv: "📄 Download CV",
+          liveChat: "💬 Talk to Julian",
+          recruiter: "⚙️ Recruiter Hub"
+        },
+        actions: {
+          projects: "Presenting Julian's featured projects: high-impact solutions such as the Real-Time GIS Emergency Portal, mobile social apps in Flutter, payment gateways, and backend architectures. Feel free to explore them on screen.",
+          experience: "Navigating to Julian's work experience timeline.",
+          certifications: "Navigating to official certifications and degrees.",
+          recruiter: "Opening the Recruiter Hub vacancy simulator.",
+          about: "Navigating to the profile and skills section.",
+          hero: "Navigating to the top home section.",
+          contact: "Navigating to the contact section.",
+          downloadCvEs: "Julian Correa's Spanish resume (PDF) has been successfully downloaded.",
+          downloadCvEn: "Julian Correa's English resume (PDF) has been successfully downloaded.",
+          downloadCvBoth: "Julian Correa's resumes in both Spanish and English (PDF) have been successfully downloaded.",
+          downloadError: "Could not complete the resume download. Please check browser permissions or try again.",
+          liveChat: "Opening chat widget and notifying Julian via Telegram.",
+          changeLangEn: "Switching portfolio language to English.",
+          changeLangEs: "Cambiando idioma del portafolio a Español.",
+          unknown: "Command received. Let me assist you with that."
+        }
       }
     }
   },
@@ -487,7 +521,7 @@ const resources = {
         contactWhatsapp: "Escribirme por WhatsApp",
         errorConn: "Problema de conexión con el backend de IA. Por favor, inténtalo de nuevo.",
         errorReach: "No puedo contactar con el servicio de IA en este momento. Por favor, reintenta en un momento.",
-        placeholder: "Pregunta sobre los proyectos, stack o experiencia de Julián...",
+        placeholder: "Escribe aquí tu mensaje...",
         send: "Enviar",
         thinking: "Pensando..."
       },
@@ -496,6 +530,40 @@ const resources = {
         subtitle: "Títulos académicos y certificaciones oficiales que respaldan mi experiencia técnica.",
         verifyBtn: "Verificar Credencial",
         underConstruction: "En construcción"
+      },
+      jarvis: {
+        activateBtn: "Activar Asistente Jarvis",
+        greeting: "Saludos. Soy Jarvis, el asistente de IA de Julián. Estoy listo para guiarte por su portafolio, mostrarte sus proyectos o conectarte en directo con él.",
+        statusIdle: "Jarvis En Espera",
+        statusListening: "Escuchando tu voz...",
+        statusThinking: "Procesando comando...",
+        statusExecuting: "Ejecutando acción...",
+        micNotSupported: "El reconocimiento de voz no está soportado en este navegador.",
+        micBlocked: "Permiso de micrófono denegado o bloqueado.",
+        pills: {
+          projects: "📁 Ver Proyectos",
+          experience: "💼 Experiencia Laboral",
+          downloadCv: "📄 Descargar CV",
+          liveChat: "💬 Hablar con Julián",
+          recruiter: "⚙️ Centro Reclutadores"
+        },
+        actions: {
+          projects: "Te presento los proyectos destacados de Julián: soluciones de alto impacto como el Portal SIG de Emergencias en tiempo real, redes sociales móviles en Flutter, pasarelas de pago y arquitecturas backend. Puedes explorarlos en pantalla.",
+          experience: "Desplazándome a la trayectoria de experiencia laboral.",
+          certifications: "Desplazándome a títulos y certificaciones oficiales.",
+          recruiter: "Abriendo el simulador del Centro de Reclutadores.",
+          about: "Desplazándome a la sección de información sobre Julián.",
+          hero: "Desplazándome al inicio de la página.",
+          contact: "Desplazándome a la sección de contacto.",
+          downloadCvEs: "La hoja de vida de Julián Correa en español (PDF) ha sido descargada satisfactoriamente.",
+          downloadCvEn: "La hoja de vida de Julián Correa en inglés (PDF) ha sido descargada satisfactoriamente.",
+          downloadCvBoth: "La hoja de vida de Julián Correa en español e inglés (PDF) ha sido descargada satisfactoriamente.",
+          downloadError: "No se pudo realizar la descarga de la hoja de vida. Por favor, verifica los permisos del navegador o inténtalo de nuevo.",
+          liveChat: "Abriendo el chat en vivo y notificando a Julián por Telegram.",
+          changeLangEn: "Switching portfolio language to English.",
+          changeLangEs: "Cambiando el idioma del portafolio a Español.",
+          unknown: "Comando recibido. Permíteme ayudarte con esa solicitud."
+        }
       }
     }
   }

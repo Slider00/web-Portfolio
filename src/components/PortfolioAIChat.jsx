@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { askPortfolioAI } from "../lib/portfolioAi";
 import { io } from "socket.io-client";
+import { executeJarvisAction, parseJarvisIntent } from "../lib/jarvisActions";
+import {
+  initJarvisRecognizer,
+  playJarvisSound,
+  speakJarvis,
+  stopJarvisSpeech,
+} from "../lib/jarvisSpeech";
 
 const CONTACT_LINKS = {
   whatsapp: import.meta.env.VITE_WHATSAPP_URL || "",
@@ -44,21 +51,45 @@ const detectContactChannelIntent = (text) => {
   return { wantsWhatsApp, wantsGitHub, wantsLinkedIn, wantsGenericContact };
 };
 
+const getTimeBasedGreeting = (lang = "es") => {
+  const hour = new Date().getHours();
+  const isEn = (lang || "").startsWith("en");
+
+  let salutation = "";
+  if (hour >= 5 && hour < 12) {
+    salutation = isEn ? "Good morning!" : "¡Buenos días!";
+  } else if (hour >= 12 && hour < 19) {
+    salutation = isEn ? "Good afternoon!" : "¡Buenas tardes!";
+  } else {
+    salutation = isEn ? "Good evening!" : "¡Buenas noches!";
+  }
+
+  if (isEn) {
+    return `${salutation} I am Jarvis, Julian's personal AI assistant. It is a true pleasure to welcome you! If you would like to speak directly with me in first person and explore his portfolio using your voice, simply tap the microphone button below. Or if you prefer to get in touch or chat directly with Julian, feel free to type your message right here in the chat.`;
+  }
+
+  return `${salutation} Soy Jarvis, el asistente personal de IA de Julián. ¡Es un verdadero gusto darte la bienvenida! Si deseas hablar directamente conmigo en primera persona y explorar su portafolio por voz, simplemente presiona el botón del micrófono abajo. O si prefieres ponerte en contacto o chatear directamente con Julián, escribe tu mensaje aquí mismo en el chat.`;
+};
+
 const PortfolioAIChat = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const [messages, setMessages] = useState(() => [
-    { role: "assistant", content: t("aiChat.welcome") },
+    { role: "assistant", content: getTimeBasedGreeting(i18n.language) },
   ]);
   const scrollRef = useRef(null);
   const socketRef = useRef(null);
+  const recognizerRef = useRef(null);
   const [liveMode, setLiveMode] = useState("ai");
   const [isConnected, setIsConnected] = useState(false);
-  const [soundMuted, setSoundMuted] = useState(() => localStorage.getItem("portfolio_chat_muted") === "true");
+  const [soundMuted, setSoundMuted] = useState(
+    () => localStorage.getItem("portfolio_chat_muted") === "true"
+  );
+  const [isListening, setIsListening] = useState(false);
 
   const getChatId = () => {
     let id = localStorage.getItem("portfolio_chat_id");
@@ -70,53 +101,55 @@ const PortfolioAIChat = () => {
   };
 
   const playNotificationSound = (isIncoming) => {
-    const isMuted = localStorage.getItem("portfolio_chat_muted") === "true";
-    if (isMuted) return;
-
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      if (isIncoming) {
-        // Tono ascendente de campana suave (Entrante)
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
-        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); // E5
-        gain.gain.setValueAtTime(0.04, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.35);
-      } else {
-        // Tono descendente tipo "pop" (Saliente)
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-        osc.frequency.exponentialRampToValueAtTime(146.83, ctx.currentTime + 0.08); // D3
-        gain.gain.setValueAtTime(0.04, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.1);
-      }
-    } catch (e) {
-      console.warn("Web Audio API bloqueada por la política del navegador.", e);
-    }
+    if (soundMuted) return;
+    playJarvisSound(isIncoming ? "activate" : "execute");
   };
 
   const toggleSound = () => {
     setSoundMuted((prev) => {
       const next = !prev;
       localStorage.setItem("portfolio_chat_muted", String(next));
+      if (next) stopJarvisSpeech();
       return next;
     });
   };
 
+  // Initialize Speech Recognizer (Microphone)
   useEffect(() => {
-    const API_URL = import.meta.env.VITE_AI_API_URL || (import.meta.env.DEV ? "http://localhost:4000" : "");
+    const recognizer = initJarvisRecognizer({
+      lang: i18n.language,
+      onResult: (text) => {
+        setIsListening(false);
+        setInput(text);
+        handleVoiceCommand(text);
+      },
+      onError: (err) => {
+        setIsListening(false);
+        console.warn("Speech Recognition error:", err);
+      },
+      onEnd: () => {
+        setIsListening(false);
+      },
+    });
+
+    recognizerRef.current = recognizer;
+  }, [i18n.language, soundMuted, messages]);
+
+  const toggleMic = () => {
+    if (isListening) {
+      recognizerRef.current?.stop();
+      setIsListening(false);
+    } else {
+      stopJarvisSpeech();
+      setIsListening(true);
+      recognizerRef.current?.start();
+    }
+  };
+
+  useEffect(() => {
+    const API_URL =
+      import.meta.env.VITE_AI_API_URL ||
+      (import.meta.env.DEV ? "http://localhost:4000" : "");
     if (!API_URL) return;
 
     const socket = io(API_URL);
@@ -137,10 +170,12 @@ const PortfolioAIChat = () => {
     });
 
     socket.on("chat-history", (history) => {
-      setMessages([
-        { role: "assistant", content: t("aiChat.welcome") },
-        ...history,
-      ]);
+      if (Array.isArray(history) && history.length > 0) {
+        setMessages([
+          { role: "assistant", content: getTimeBasedGreeting(i18n.language) },
+          ...history,
+        ]);
+      }
     });
 
     socket.on("mensaje-servidor", ({ text, sender }) => {
@@ -155,6 +190,11 @@ const PortfolioAIChat = () => {
       setLoading(false);
       playNotificationSound(true);
 
+      // Speak Jarvis voice response if not muted
+      if (!soundMuted) {
+        speakJarvis(text, i18n.language);
+      }
+
       requestAnimationFrame(() => {
         if (scrollRef.current) {
           scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -165,7 +205,87 @@ const PortfolioAIChat = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [i18n.language, soundMuted]);
+
+  // Dedicated Voice Handler for Microphone Input (Always routes to Jarvis AI + Gemini + Voice Synthesis)
+  const handleVoiceCommand = async (spokenText) => {
+    const text = (spokenText || "").trim();
+    if (!text || loading) return;
+
+    const nextMessages = [...messages, { role: "user", content: text }];
+    setMessages(nextMessages);
+    playJarvisSound("execute");
+    setInput("");
+    setError("");
+    setLoading(true);
+
+    // 1. Execute UI Actions (Scrolling, CV Download, Language Switch)
+    const intent = parseJarvisIntent(text);
+    const actionResult = executeJarvisAction(intent, {
+      openChat: () => setOpen(true),
+      changeLanguage: (lang) => i18n.changeLanguage(lang),
+    });
+
+    if (intent.type === "DOWNLOAD_CV") {
+      const confirmationMsg =
+        actionResult?.success === false
+          ? t("jarvis.actions.downloadError")
+          : t(intent.speechKey);
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: confirmationMsg },
+      ]);
+      setLoading(false);
+
+      if (!soundMuted) {
+        speakJarvis(confirmationMsg, i18n.language);
+      }
+      return;
+    }
+
+    // 2. Direct HTTP Query to Gemini AI (Always bypasses Telegram WebSockets)
+    const nextHistory = nextMessages
+      .filter((m) => m.role === "user" || m.role === "assistant")
+      .map((m) => ({ role: m.role, content: m.content }));
+
+    try {
+      const data = await askPortfolioAI(text, nextHistory);
+      const reply =
+        data?.reply ||
+        "I could not generate a response right now. Please try again.";
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: reply,
+        },
+      ]);
+
+      // Speak Jarvis Voice response
+      if (!soundMuted) {
+        speakJarvis(reply, i18n.language);
+      }
+    } catch (err) {
+      console.error("Jarvis voice command error:", err);
+      const errorMsg = t("aiChat.errorReach");
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: errorMsg },
+      ]);
+      if (!soundMuted) {
+        speakJarvis(errorMsg, i18n.language);
+      }
+    } finally {
+      setLoading(false);
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      });
+    }
+  };
 
   const handleSend = async (presetMessage) => {
     const message = (presetMessage ?? input).trim();
@@ -176,18 +296,27 @@ const PortfolioAIChat = () => {
     playNotificationSound(false);
     if (!presetMessage) setInput("");
     setError("");
-    setLoading(true);
 
-    // Si el socket está conectado, emitir el mensaje por WebSockets
-    if (socketRef.current && socketRef.current.connected) {
-      socketRef.current.emit("mensaje-cliente", {
-        chatId: getChatId(),
-        text: message,
+    // In Live Human Chat (Telegram) mode, emit and release loading immediately so user can keep chatting
+    if (liveMode === "human") {
+      if (socketRef.current && socketRef.current.connected) {
+        socketRef.current.emit("mensaje-cliente", {
+          chatId: getChatId(),
+          text: message,
+        });
+      }
+      setLoading(false);
+      requestAnimationFrame(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
       });
       return;
     }
 
-    // Fallback HTTP si el servidor de sockets no está activo
+    setLoading(true);
+
+    // In AI Mode, process via Gemini AI & guarantee setLoading(false) in finally
     const nextHistory = nextMessages
       .filter((m) => m.role === "user" || m.role === "assistant")
       .map((m) => ({ role: m.role, content: m.content }));
@@ -311,6 +440,11 @@ const PortfolioAIChat = () => {
           actions: finalActions,
         },
       ]);
+
+      // Speak Jarvis voice response
+      if (!soundMuted) {
+        speakJarvis(reply, i18n.language);
+      }
     } catch (err) {
       setError(t("aiChat.errorConn"));
       setMessages((prev) => [
@@ -331,36 +465,68 @@ const PortfolioAIChat = () => {
     }
   };
 
+  const handleToggleOpen = () => {
+    const nextOpen = !open;
+    setOpen(nextOpen);
+
+    if (nextOpen) {
+      const greeting = getTimeBasedGreeting(i18n.language);
+      playJarvisSound("activate");
+
+      setMessages((prevMsgs) => {
+        if (prevMsgs.length <= 1) {
+          return [{ role: "assistant", content: greeting }];
+        }
+        return prevMsgs;
+      });
+
+      if (!soundMuted) {
+        speakJarvis(greeting, i18n.language);
+      }
+    } else {
+      stopJarvisSpeech();
+    }
+  };
+
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={handleToggleOpen}
         className="fixed z-50 flex items-end justify-end w-[5.4rem] h-[5.4rem] transition rounded-full shadow-[0_8px_30px_rgba(90,65,180,0.45)] bottom-6 right-5 hover:scale-[1.04]"
-        aria-label="Open AI assistant"
+        aria-label="Open Jarvis AI assistant"
       >
         <img
           src={`${import.meta.env.BASE_URL}assets/ai-robot-bubble.svg`}
-          alt="AI robot"
+          alt="Jarvis AI"
           className="object-cover w-full h-full rounded-full"
           loading="eager"
           decoding="async"
         />
         <span className="absolute px-2 py-0.5 text-[10px] font-bold tracking-wide text-white rounded-full border right-1.5 bottom-1.5 bg-black/65 border-white/30">
-          {t("aiChat.badge")}
+          Jarvis
         </span>
       </button>
 
       {open && (
-        <aside className="fixed z-50 w-[min(92vw,24rem)] h-[70vh] max-h-[44rem] bottom-24 right-5 rounded-2xl border border-white/10 bg-primary/95 backdrop-blur-md shadow-2xl">
+        <aside className="fixed z-50 w-[min(92vw,24rem)] h-[70vh] max-h-[44rem] bottom-24 right-5 rounded-2xl border border-[#33c2cc]/30 bg-primary/95 backdrop-blur-md shadow-2xl flex flex-col overflow-hidden">
+          {/* Header */}
           <header className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-            <h3 className="text-sm font-semibold">Portfolio AI Assistant</h3>
+            <div className="flex items-center gap-2">
+              <span className="relative flex size-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#33c2cc] opacity-75"></span>
+                <span className="relative inline-flex rounded-full size-2.5 bg-[#33c2cc]"></span>
+              </span>
+              <h3 className="text-sm font-bold text-white font-mono flex items-center gap-1.5">
+                🤖 Jarvis
+              </h3>
+            </div>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={toggleSound}
                 className="text-neutral-300 hover:text-white transition-colors cursor-pointer"
-                title={soundMuted ? "Activar sonido" : "Silenciar"}
+                title={soundMuted ? "Activar Voz de Jarvis" : "Silenciar Voz"}
               >
                 {soundMuted ? (
                   <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -368,7 +534,7 @@ const PortfolioAIChat = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
                   </svg>
                 ) : (
-                  <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4.5 h-4.5 text-[#33c2cc]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                   </svg>
                 )}
@@ -377,13 +543,14 @@ const PortfolioAIChat = () => {
                 type="button"
                 onClick={() => setOpen(false)}
                 className="text-neutral-300 hover:text-white"
-                aria-label="Close AI assistant"
+                aria-label="Close Jarvis assistant"
               >
                 ✕
               </button>
             </div>
           </header>
 
+          {/* Telegram Live Mode Toggle Bar */}
           {liveMode === "ai" ? (
             <div className="flex justify-between items-center bg-emerald-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-emerald-400 font-semibold">
               <span>¿Quieres hablar conmigo en directo?</span>
@@ -430,9 +597,10 @@ const PortfolioAIChat = () => {
             </div>
           )}
 
+          {/* Messages Scroll Area */}
           <div
             ref={scrollRef}
-            className="overflow-y-auto px-3 py-3 space-y-3 h-[calc(100%-10.5rem)]"
+            className="flex-1 overflow-y-auto px-3 py-3 space-y-3"
           >
             {messages.map((message, index) => (
               <article
@@ -503,6 +671,7 @@ const PortfolioAIChat = () => {
             )}
           </div>
 
+          {/* Footer Input Area with Microphone */}
           <footer className="px-3 py-2 border-t border-white/10">
             <div className="flex items-end gap-2">
               <textarea
@@ -518,11 +687,28 @@ const PortfolioAIChat = () => {
                 placeholder={t("aiChat.placeholder")}
                 className="w-full px-3 py-2 text-base text-white rounded-lg resize-none bg-white/10 md:text-sm field-input-focus placeholder:text-neutral-400"
               />
+
+              {/* Microphone Voice Input Button */}
+              <button
+                type="button"
+                onClick={toggleMic}
+                className={`p-2.5 rounded-lg border transition-all duration-300 cursor-pointer ${
+                  isListening
+                    ? "bg-red-500/20 border-red-500 text-red-400 animate-pulse"
+                    : "bg-white/10 border-white/10 text-neutral-300 hover:text-white hover:bg-white/20"
+                }`}
+                title="Hablar por micrófono con Jarvis"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </button>
+
               <button
                 type="button"
                 disabled={loading}
                 onClick={() => handleSend()}
-                className="px-3 py-2 text-sm font-semibold text-white rounded-lg bg-lavender disabled:opacity-60"
+                className="px-4 py-2.5 text-sm font-bold text-white rounded-xl bg-[#7a57db] hover:bg-[#8a68e6] active:scale-95 shadow-[0_4px_15px_rgba(122,87,219,0.5)] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-all duration-200"
               >
                 {t("aiChat.send")}
               </button>
