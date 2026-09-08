@@ -4,12 +4,77 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/web-Portfolio/vite.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio</title>
-    <script type="module" crossorigin src="/web-Portfolio/assets/main-KLeSyF3g.js"></script>
-    <link rel="modulepreload" crossorigin href="/web-Portfolio/assets/Footer-DcKcitdK.js">
-    <link rel="stylesheet" crossorigin href="/web-Portfolio/assets/Footer-CQqLfMcK.css">
+    <meta name="google-site-verification" content="oLXH-Do5IlApXKtuieDCaWl9MNuxDg1P-SFwEd5TrHs" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Julián Correa | Senior Front-End & Mobile Developer Portfolio</title>
+    <meta name="title" content="Julián Correa | Senior Front-End & Mobile Developer Portfolio" />
+    <meta name="description" content="Ingeniero Informático y Desarrollador Front-End con más de 4 años de experiencia creando soluciones web y móviles escalables con React, Next.js, Flutter, TypeScript y C#." />
+    <meta name="keywords" content="Julián Correa, Front-End Developer, React, Next.js, Flutter, TypeScript, Web Development, Mobile Apps, Portfolio" />
+    <meta name="author" content="Julián Correa" />
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn / Telegram -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Julián Correa | Senior Front-End & Mobile Developer Portfolio" />
+    <meta property="og:description" content="Ingeniero Informático y Desarrollador Front-End con experiencia en React, Next.js, Flutter, TypeScript y arquitecturas web/móviles." />
+    <meta property="og:image" content="/web-Portfolio/assets/og-preview.png" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Julián Correa | Senior Front-End & Mobile Developer Portfolio" />
+    <meta name="twitter:description" content="Ingeniero Informático y Desarrollador Front-End con experiencia en React, Next.js, Flutter, TypeScript y arquitecturas web/móviles." />
+    <meta name="twitter:image" content="/web-Portfolio/assets/og-preview.png" />
+    <style>
+      /* Critical inline CSS to prevent FOUC & show loading screen immediately */
+      .initial-loader-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #030412;
+        z-index: 9999;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      .loader-spinner {
+        width: 42px;
+        height: 42px;
+        border: 3px solid rgba(255, 255, 255, 0.03);
+        border-top-color: #33c2cc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 15px rgba(51, 194, 204, 0.15);
+        margin-bottom: 20px;
+      }
+      .loader-text {
+        color: #888888;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+    </style>
+    <script type="module" crossorigin src="/web-Portfolio/assets/index-Dly3Eihl.js"></script>
+    <link rel="stylesheet" crossorigin href="/web-Portfolio/assets/index-D3qvyMpp.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="initial-loader-container">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Cargando Portafolio</div>
+      </div>
+    </div>
   </body>
 </html>
