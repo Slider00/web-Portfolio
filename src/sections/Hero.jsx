@@ -18,7 +18,7 @@ const Hero = () => {
   }, []);
   const mobileDpr = isLowEndDevice ? [1, 1.25] : [1.5, 2];
   return (
-    <section className="flex items-start justify-center min-h-screen overflow-hidden md:items-start md:justify-start c-space">
+    <section id="hero" className="flex items-start justify-center min-h-screen overflow-hidden md:items-start md:justify-start c-space">
       <HeroText />
       <ParallaxBackground />
       <figure

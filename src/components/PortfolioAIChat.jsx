@@ -9,6 +9,7 @@ import {
   speakJarvis,
   stopJarvisSpeech,
 } from "../lib/jarvisSpeech";
+import JarvisHologramAvatar from "./JarvisHologramAvatar";
 
 const CONTACT_LINKS = {
   whatsapp: import.meta.env.VITE_WHATSAPP_URL || "",
@@ -465,61 +466,73 @@ const PortfolioAIChat = () => {
     }
   };
 
+  const hasGreetedRef = useRef(
+    sessionStorage.getItem("portfolio_chat_greeted") === "true"
+  );
+
   const handleToggleOpen = () => {
     const nextOpen = !open;
     setOpen(nextOpen);
 
     if (nextOpen) {
       const greeting = getTimeBasedGreeting(i18n.language);
-      playJarvisSound("activate");
 
       setMessages((prevMsgs) => {
-        if (prevMsgs.length <= 1) {
+        if (prevMsgs.length === 0) {
           return [{ role: "assistant", content: greeting }];
         }
         return prevMsgs;
       });
 
-      if (!soundMuted) {
-        speakJarvis(greeting, i18n.language);
+      // Play sound and voice greeting ONLY the very first time the chat is opened during the session
+      if (!hasGreetedRef.current) {
+        hasGreetedRef.current = true;
+        sessionStorage.setItem("portfolio_chat_greeted", "true");
+        playJarvisSound("activate");
+
+        if (!soundMuted) {
+          speakJarvis(greeting, i18n.language);
+        }
       }
     } else {
       stopJarvisSpeech();
     }
   };
 
+  const avatarStatus = isListening ? "LISTENING" : loading ? "THINKING" : "IDLE";
+
   return (
     <>
-      <button
-        type="button"
-        onClick={handleToggleOpen}
-        className="fixed z-50 flex items-end justify-end w-[5.4rem] h-[5.4rem] transition rounded-full shadow-[0_8px_30px_rgba(90,65,180,0.45)] bottom-6 right-5 hover:scale-[1.04]"
+      <div
+        className="fixed z-50 bottom-6 right-5 cursor-pointer transition-transform duration-300 hover:scale-105"
         aria-label="Open Jarvis AI assistant"
       >
-        <img
-          src={`${import.meta.env.BASE_URL}assets/ai-robot-bubble.svg`}
-          alt="Jarvis AI"
-          className="object-cover w-full h-full rounded-full"
-          loading="eager"
-          decoding="async"
+        <JarvisHologramAvatar
+          status={avatarStatus}
+          size="lg"
+          onClick={handleToggleOpen}
         />
-        <span className="absolute px-2 py-0.5 text-[10px] font-bold tracking-wide text-white rounded-full border right-1.5 bottom-1.5 bg-black/65 border-white/30">
-          Jarvis
-        </span>
-      </button>
+      </div>
 
       {open && (
         <aside className="fixed z-50 w-[min(92vw,24rem)] h-[70vh] max-h-[44rem] bottom-24 right-5 rounded-2xl border border-[#33c2cc]/30 bg-primary/95 backdrop-blur-md shadow-2xl flex flex-col overflow-hidden">
           {/* Header */}
-          <header className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <span className="relative flex size-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#33c2cc] opacity-75"></span>
-                <span className="relative inline-flex rounded-full size-2.5 bg-[#33c2cc]"></span>
-              </span>
-              <h3 className="text-sm font-bold text-white font-mono flex items-center gap-1.5">
-                🤖 Jarvis
-              </h3>
+          <header className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-black/40">
+            <div className="flex items-center gap-2.5">
+              <JarvisHologramAvatar
+                status={avatarStatus}
+                size="sm"
+                showBadge={false}
+                interactive={false}
+              />
+              <div>
+                <h3 className="text-sm font-bold text-white font-mono flex items-center gap-1.5 leading-none">
+                  J.A.R.V.I.S. <span className="text-[10px] text-[#33c2cc] font-normal">v4.0 AI</span>
+                </h3>
+                <span className="text-[10px] text-neutral-400 font-mono">
+                  {isListening ? "● Escuchando..." : loading ? "● Procesando..." : "● En línea"}
+                </span>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <button

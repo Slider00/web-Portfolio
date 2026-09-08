@@ -1,4 +1,5 @@
 // J.A.R.V.I.S. Action Parser & UI Execution Engine
+import { jarvisTour } from "./jarvisTour";
 
 export const parseJarvisIntent = (text = "") => {
   // Normalize text removing accents
@@ -181,7 +182,19 @@ export const parseJarvisIntent = (text = "") => {
     return { type: "OPEN_LIVE_CHAT", speechKey: "jarvis.actions.liveChat" };
   }
 
-  // 11. Language Switch Intents
+  // 11. Guided Tour Intents
+  if (
+    query.includes("tour") ||
+    query.includes("recorrido") ||
+    query.includes("guiado") ||
+    query.includes("copilot") ||
+    query.includes("co-piloto") ||
+    query.includes("guided")
+  ) {
+    return { type: "START_TOUR", speechKey: "jarvis.actions.tour" };
+  }
+
+  // 12. Language Switch Intents
   if (query.includes("ingles") || query.includes("english")) {
     return { type: "CHANGE_LANGUAGE", lang: "en", speechKey: "jarvis.actions.changeLangEn" };
   }
@@ -197,6 +210,10 @@ export const executeJarvisAction = (action, helpers = {}) => {
   if (!action || !action.type) return;
 
   switch (action.type) {
+    case "START_TOUR": {
+      jarvisTour.startTour(helpers.lang || "es");
+      break;
+    }
     case "NAVIGATE": {
       const el = document.getElementById(action.target);
       if (el) {

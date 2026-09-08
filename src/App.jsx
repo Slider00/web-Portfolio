@@ -10,10 +10,12 @@ import RecruiterHub from "./sections/RecruiterHub";
 import Contact from "./sections/Contact";
 import Footer from './sections/Footer';
 import PortfolioAIChat from "./components/PortfolioAIChat";
+import JarvisTourOverlay from "./components/JarvisTourOverlay";
 
 const App = () => {
   return (
     <div className="container mx-auto max-w-7xl">
+      <JarvisTourOverlay />
       <Navbar />
       <Hero />
       <About />

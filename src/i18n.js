@@ -261,6 +261,7 @@ const resources = {
         micNotSupported: "Speech recognition is not supported in this browser.",
         micBlocked: "Microphone access blocked. Please allow permission.",
         pills: {
+          tour: "🚀 Guided Tour",
           projects: "📁 Show Projects",
           experience: "💼 Work Experience",
           downloadCv: "📄 Download CV",
@@ -268,6 +269,7 @@ const resources = {
           recruiter: "⚙️ Recruiter Hub"
         },
         actions: {
+          tour: "Starting J.A.R.V.I.S. AI Co-Pilot Guided Tour.",
           projects: "Presenting Julian's featured projects: high-impact solutions such as the Real-Time GIS Emergency Portal, mobile social apps in Flutter, payment gateways, and backend architectures. Feel free to explore them on screen.",
           experience: "Navigating to Julian's work experience timeline.",
           certifications: "Navigating to official certifications and degrees.",
@@ -541,6 +543,7 @@ const resources = {
         micNotSupported: "El reconocimiento de voz no está soportado en este navegador.",
         micBlocked: "Permiso de micrófono denegado o bloqueado.",
         pills: {
+          tour: "🚀 Tour Guiado",
           projects: "📁 Ver Proyectos",
           experience: "💼 Experiencia Laboral",
           downloadCv: "📄 Descargar CV",
@@ -548,6 +551,7 @@ const resources = {
           recruiter: "⚙️ Centro Reclutadores"
         },
         actions: {
+          tour: "Iniciando tour guiado con voz de J.A.R.V.I.S.",
           projects: "Te presento los proyectos destacados de Julián: soluciones de alto impacto como el Portal SIG de Emergencias en tiempo real, redes sociales móviles en Flutter, pasarelas de pago y arquitecturas backend. Puedes explorarlos en pantalla.",
           experience: "Desplazándome a la trayectoria de experiencia laboral.",
           certifications: "Desplazándome a títulos y certificaciones oficiales.",

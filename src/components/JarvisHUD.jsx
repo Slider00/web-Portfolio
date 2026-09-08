@@ -8,6 +8,7 @@ import {
 } from "../lib/jarvisSpeech";
 import { executeJarvisAction, parseJarvisIntent } from "../lib/jarvisActions";
 import { askPortfolioAI } from "../lib/portfolioAi";
+import JarvisHologramAvatar from "./JarvisHologramAvatar";
 
 const JarvisHUD = ({ onOpenLiveChat }) => {
   const { t, i18n } = useTranslation();
@@ -187,19 +188,12 @@ const JarvisHUD = ({ onOpenLiveChat }) => {
           {/* Header & Status Bar */}
           <div className="flex items-center justify-between border-b border-white/10 pb-2">
             <div className="flex items-center gap-2">
-              {/* Futuristic Arc Reactor Indicator */}
-              <div className="relative size-6 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full border border-[#33c2cc]/60 jarvis-ring-rotate" />
-                <div
-                  className={`size-2.5 rounded-full transition-all duration-300 ${
-                    status === "LISTENING"
-                      ? "bg-red-500 animate-ping"
-                      : status === "SPEAKING" || status === "EXECUTING"
-                      ? "bg-[#33c2cc] animate-pulse"
-                      : "bg-emerald-400"
-                  }`}
-                />
-              </div>
+              <JarvisHologramAvatar
+                status={status}
+                size="sm"
+                showBadge={false}
+                interactive={false}
+              />
               <div>
                 <h4 className="text-[11px] font-mono font-bold tracking-widest text-[#33c2cc] uppercase">
                   JARVIS HUD
@@ -275,8 +269,14 @@ const JarvisHUD = ({ onOpenLiveChat }) => {
               {/* Quick Action Pills */}
               <div className="flex flex-wrap gap-1.5 pt-1">
                 <button
+                  onClick={() => handleCommand("iniciar tour guiado")}
+                  className="px-2 py-1 rounded bg-[#00f3ff]/20 border border-[#00f3ff]/50 text-cyan-300 text-[10px] font-mono font-bold hover:bg-[#00f3ff]/35 transition-colors cursor-pointer animate-pulse"
+                >
+                  {t("jarvis.pills.tour")}
+                </button>
+                <button
                   onClick={() => handleCommand("ver proyectos")}
-                  className="px-2 py-1 rounded bg-[#33c2cc]/10 border border-[#33c2cc]/30 text-white text-[10px] font-mono hover:bg-[#33c2cc]/25 transition-colors cursor-pointer"
+                  className="px-2 py-1 rounded bg-white/5 border border-white/10 text-neutral-300 text-[10px] font-mono hover:bg-white/15 transition-colors cursor-pointer"
                 >
                   {t("jarvis.pills.projects")}
                 </button>
