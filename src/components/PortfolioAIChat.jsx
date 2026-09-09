@@ -124,9 +124,12 @@ const PortfolioAIChat = () => {
     });
   };
 
-  // Automatically minimize / close chat dialog when Guided Tour is active
+  const [tourState, setTourState] = useState(() => jarvisTour.getState());
+
+  // Automatically minimize / close chat dialog when Guided Tour is active & track tour state
   useEffect(() => {
     const unsubscribe = jarvisTour.subscribe((state) => {
+      setTourState({ ...state });
       if (state.active) {
         setOpen(false);
       }
@@ -571,7 +574,25 @@ const PortfolioAIChat = () => {
     }
   };
 
-  const avatarStatus = isListening ? "LISTENING" : loading ? "THINKING" : "IDLE";
+  const avatarStatus = tourState.active
+    ? tourState.isSpeaking
+      ? "SPEAKING"
+      : tourState.paused
+      ? "IDLE"
+      : "THINKING"
+    : isListening
+    ? "LISTENING"
+    : loading
+    ? "THINKING"
+    : "IDLE";
+
+  const handleAvatarClick = () => {
+    if (tourState.active) {
+      jarvisTour.togglePause();
+    } else {
+      handleToggleOpen();
+    }
+  };
 
   return (
     <>
@@ -582,7 +603,7 @@ const PortfolioAIChat = () => {
         <JarvisHologramAvatar
           status={avatarStatus}
           size="lg"
-          onClick={handleToggleOpen}
+          onClick={handleAvatarClick}
         />
       </div>
 
