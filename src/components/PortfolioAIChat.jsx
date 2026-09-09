@@ -10,6 +10,7 @@ import {
   stopJarvisSpeech,
 } from "../lib/jarvisSpeech";
 import JarvisHologramAvatar from "./JarvisHologramAvatar";
+import { jarvisTour } from "../lib/jarvisTour";
 
 const CONTACT_LINKS = {
   whatsapp: import.meta.env.VITE_WHATSAPP_URL || "",
@@ -123,6 +124,16 @@ const PortfolioAIChat = () => {
       return next;
     });
   };
+
+  // Automatically minimize / close chat dialog when Guided Tour is active
+  useEffect(() => {
+    const unsubscribe = jarvisTour.subscribe((state) => {
+      if (state.active) {
+        setOpen(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Initialize Speech Recognizer (Microphone)
   useEffect(() => {
