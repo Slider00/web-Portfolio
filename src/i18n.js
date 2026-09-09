@@ -253,7 +253,7 @@ const resources = {
       },
       jarvis: {
         activateBtn: "Activate Jarvis Assistant",
-        greeting: "Greetings. I am Jarvis, Julian's AI assistant. I am ready to guide you through his portfolio, show his projects, or connect you directly with him.",
+        greeting: "Greetings. I am Jarvis, Julian's AI assistant. You can take an interactive Guided Tour with me, explore his projects, or connect directly with him.",
         statusIdle: "Jarvis Standby",
         statusListening: "Listening to voice input...",
         statusThinking: "Processing command...",
@@ -535,7 +535,7 @@ const resources = {
       },
       jarvis: {
         activateBtn: "Activar Asistente Jarvis",
-        greeting: "Saludos. Soy Jarvis, el asistente de IA de Julián. Estoy listo para guiarte por su portafolio, mostrarte sus proyectos o conectarte en directo con él.",
+        greeting: "Saludos. Soy Jarvis, el asistente de IA de Julián. Puedo acompañarte en un tour guiado narrado por su portafolio, mostrarte sus proyectos o conectarte en directo con él.",
         statusIdle: "Jarvis En Espera",
         statusListening: "Escuchando tu voz...",
         statusThinking: "Procesando comando...",

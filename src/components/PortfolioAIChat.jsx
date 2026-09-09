@@ -66,10 +66,10 @@ const getTimeBasedGreeting = (lang = "es") => {
   }
 
   if (isEn) {
-    return `${salutation} I am Jarvis, Julian's personal AI assistant. It is a true pleasure to welcome you! If you would like to speak directly with me in first person and explore his portfolio using your voice, simply tap the microphone button below. Or if you prefer to get in touch or chat directly with Julian, feel free to type your message right here in the chat.`;
+    return `${salutation} I am Jarvis, Julian's personal AI assistant. It is a true pleasure to welcome you! You can take an interactive Guided Tour with me, speak using your voice, or explore his projects. Just tap "🚀 Guided Tour" below or type your message here in the chat.`;
   }
 
-  return `${salutation} Soy Jarvis, el asistente personal de IA de Julián. ¡Es un verdadero gusto darte la bienvenida! Si deseas hablar directamente conmigo en primera persona y explorar su portafolio por voz, simplemente presiona el botón del micrófono abajo. O si prefieres ponerte en contacto o chatear directamente con Julián, escribe tu mensaje aquí mismo en el chat.`;
+  return `${salutation} Soy Jarvis, el asistente personal de IA de Julián. ¡Es un verdadero gusto darte la bienvenida! Puedes realizar un **Tour Guiado** por voz conmigo, explorar sus proyectos o ponerte en contacto. Simplemente presiona el botón "🚀 Tour Guiado" abajo o escribe tu mensaje aquí mismo.`;
 };
 
 const PortfolioAIChat = () => {
@@ -80,7 +80,16 @@ const PortfolioAIChat = () => {
   const [error, setError] = useState("");
 
   const [messages, setMessages] = useState(() => [
-    { role: "assistant", content: getTimeBasedGreeting(i18n.language) },
+    {
+      role: "assistant",
+      content: getTimeBasedGreeting(i18n.language),
+      suggestions: [
+        i18n.language.startsWith("en") ? "🚀 Guided Tour" : "🚀 Tour Guiado",
+        i18n.language.startsWith("en") ? "📁 Show Projects" : "📁 Ver Proyectos",
+        i18n.language.startsWith("en") ? "📄 Download CV" : "📄 Descargar CV",
+        i18n.language.startsWith("en") ? "💬 Talk to Julian" : "💬 Hablar con Julián",
+      ],
+    },
   ]);
   const scrollRef = useRef(null);
   const socketRef = useRef(null);
