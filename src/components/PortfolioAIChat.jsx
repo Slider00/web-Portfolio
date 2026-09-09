@@ -88,7 +88,6 @@ const PortfolioAIChat = () => {
         i18n.language.startsWith("en") ? "🚀 Guided Tour" : "🚀 Tour Guiado",
         i18n.language.startsWith("en") ? "📁 Show Projects" : "📁 Ver Proyectos",
         i18n.language.startsWith("en") ? "📄 Download CV" : "📄 Descargar CV",
-        i18n.language.startsWith("en") ? "💬 Talk to Julian" : "💬 Hablar con Julián",
       ],
     },
   ]);
@@ -635,53 +634,6 @@ const PortfolioAIChat = () => {
               </button>
             </div>
           </header>
-
-          {/* Telegram Live Mode Toggle Bar */}
-          {liveMode === "ai" ? (
-            <div className="flex justify-between items-center bg-emerald-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-emerald-400 font-semibold">
-              <span>¿Quieres hablar conmigo en directo?</span>
-              <button
-                disabled={!isConnected}
-                onClick={() => {
-                  if (socketRef.current) {
-                    socketRef.current.emit("request-live-chat", { chatId: getChatId() });
-                  }
-                }}
-                className={`px-2 py-0.5 rounded font-bold transition-all duration-300 ${
-                  isConnected
-                    ? "bg-emerald-500 hover:bg-emerald-600 text-black cursor-pointer animate-pulse"
-                    : "bg-white/5 text-neutral-500 cursor-not-allowed"
-                }`}
-              >
-                {isConnected ? "Chatear" : "Conectando..."}
-              </button>
-            </div>
-          ) : (
-            <div className="flex justify-between items-center bg-indigo-500/10 border-b border-white/5 px-3 py-1.5 text-[11px] text-neutral-300 font-semibold">
-              <div className="flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span>Chat en Vivo con Julián</span>
-              </div>
-              <button
-                disabled={!isConnected}
-                onClick={() => {
-                  if (socketRef.current) {
-                    socketRef.current.emit("exit-live-chat", { chatId: getChatId() });
-                  }
-                }}
-                className={`px-2.5 py-0.5 rounded font-semibold text-[10px] transition-all duration-300 ${
-                  isConnected
-                    ? "bg-white/10 hover:bg-white/20 text-white cursor-pointer"
-                    : "bg-white/5 text-neutral-500 cursor-not-allowed"
-                }`}
-              >
-                {isConnected ? "Volver a la IA" : "Conectando..."}
-              </button>
-            </div>
-          )}
 
           {/* Messages Scroll Area */}
           <div

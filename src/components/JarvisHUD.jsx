@@ -293,12 +293,6 @@ const JarvisHUD = ({ onOpenLiveChat }) => {
                   {t("jarvis.pills.downloadCv")}
                 </button>
                 <button
-                  onClick={() => handleCommand("hablar con julian")}
-                  className="px-2 py-1 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[10px] font-mono hover:bg-emerald-500/30 transition-colors cursor-pointer"
-                >
-                  {t("jarvis.pills.liveChat")}
-                </button>
-                <button
                   onClick={() => handleCommand("centro reclutadores")}
                   className="px-2 py-1 rounded bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[10px] font-mono hover:bg-purple-500/30 transition-colors cursor-pointer"
                 >
