@@ -220,12 +220,26 @@ const PortfolioAIChat = () => {
     setError("");
     setLoading(true);
 
-    // 1. Execute UI Actions (Scrolling, CV Download, Language Switch)
+    // 1. Execute UI Actions (Scrolling, Guided Tour, CV Download, Language Switch)
     const intent = parseJarvisIntent(text);
     const actionResult = executeJarvisAction(intent, {
       openChat: () => setOpen(true),
       changeLanguage: (lang) => i18n.changeLanguage(lang),
+      lang: i18n.language,
     });
+
+    if (intent.type === "START_TOUR") {
+      const tourMsg = i18n.language.startsWith("en")
+        ? "Starting the J.A.R.V.I.S. AI Co-Pilot guided tour..."
+        : "¡Excelente! Iniciando el tour guiado con la voz de J.A.R.V.I.S...";
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: tourMsg },
+      ]);
+      setLoading(false);
+      return;
+    }
 
     if (intent.type === "DOWNLOAD_CV") {
       const confirmationMsg =
@@ -316,6 +330,45 @@ const PortfolioAIChat = () => {
     }
 
     setLoading(true);
+
+    // 1. Execute local UI Actions (Guided Tour, Scroll Navigation, CV Download, Language Switch)
+    const intent = parseJarvisIntent(message);
+    const actionResult = executeJarvisAction(intent, {
+      openChat: () => setOpen(true),
+      changeLanguage: (lang) => i18n.changeLanguage(lang),
+      lang: i18n.language,
+    });
+
+    if (intent.type === "START_TOUR") {
+      const tourMsg = i18n.language.startsWith("en")
+        ? "Starting the J.A.R.V.I.S. AI Co-Pilot guided tour..."
+        : "¡Excelente! Iniciando el tour guiado con la voz de J.A.R.V.I.S...";
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: tourMsg },
+      ]);
+      setLoading(false);
+      return;
+    }
+
+    if (intent.type === "DOWNLOAD_CV") {
+      const confirmationMsg =
+        actionResult?.success === false
+          ? t("jarvis.actions.downloadError")
+          : t(intent.speechKey);
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: confirmationMsg },
+      ]);
+      setLoading(false);
+
+      if (!soundMuted) {
+        speakJarvis(confirmationMsg, i18n.language);
+      }
+      return;
+    }
 
     // In AI Mode, process via Gemini AI & guarantee setLoading(false) in finally
     const nextHistory = nextMessages
