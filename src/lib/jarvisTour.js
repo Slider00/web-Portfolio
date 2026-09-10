@@ -219,26 +219,39 @@ class JarvisTourController {
 
     this.highlightSection(step.targetId);
 
+    // Smooth scroll position with sticky navbar top offset (70px)
     const el = document.getElementById(step.targetId);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      const navOffset = 70;
+      const elementPosition = el.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = Math.max(0, elementPosition - navOffset);
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
     }
 
     this.isSpeaking = true;
     this.notify();
 
-    this.scrollTimeout = setTimeout(() => {
-      if (!this.active || this.paused) return;
+    // Initiate voice narration in exact parallel synchronization with camera movement
+    const speechText = this.lang === "en" ? step.speechEn : step.speechEs;
 
-      const speechText = this.lang === "en" ? step.speechEn : step.speechEs;
-
-      speakJarvis(speechText, this.lang, {
+    speakJarvis(
+      speechText,
+      this.lang,
+      {
+        onStart: () => {
+          this.isSpeaking = true;
+          this.notify();
+        },
         onEnd: () => {
           this.isSpeaking = false;
           this.notify();
 
           if (this.active && !this.paused) {
-            setTimeout(() => {
+            this.scrollTimeout = setTimeout(() => {
               if (this.active && !this.paused) {
                 if (this.currentStepIndex < TOUR_STEPS.length - 1) {
                   this.nextStep();
@@ -246,11 +259,12 @@ class JarvisTourController {
                   this.stopTour();
                 }
               }
-            }, 1800);
+            }, 700); // Fast, snappy 700ms pause between tour sections
           }
         },
-      });
-    }, 600);
+      },
+      { preferLocal: true } // 0ms latency local voice execution for Vercel Free Tier efficiency
+    );
   }
 
   nextStep() {

@@ -106,7 +106,7 @@ const Navbar = () => {
     return (
         <div className="fixed inset-x-0 z-20 w-full backdrop-blur-lg bg-primary/40">
             <motion.div
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-aqua via-lavender to-fuchsia origin-[0%]"
+                className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#00f3ff] via-[#33c2cc] to-[#ffab00] shadow-[0_0_10px_#00f3ff] origin-[0%]"
                 style={{ scaleX }}
             />
             <div className="mx-auto c-space max-w-7xl">

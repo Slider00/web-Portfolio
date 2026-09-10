@@ -216,7 +216,7 @@ const fallbackSpeechSynthesis = (cleanedText, lang, callbacks) => {
   window.speechSynthesis.speak(utterance);
 };
 
-export const speakJarvis = async (text, lang = "es", callbacks = {}) => {
+export const speakJarvis = async (text, lang = "es", callbacks = {}, options = {}) => {
   // Cancel any ongoing speech / audio
   stopJarvisSpeech();
 
@@ -226,13 +226,19 @@ export const speakJarvis = async (text, lang = "es", callbacks = {}) => {
     return;
   }
 
+  playJarvisSound("execute");
+
+  // Fast zero-latency path for guided tour and Vercel free tier efficiency
+  if (options.preferLocal) {
+    fallbackSpeechSynthesis(cleanedText, lang, callbacks);
+    return;
+  }
+
   const API_URL =
     import.meta.env.VITE_AI_API_URL ||
     (import.meta.env.DEV ? "http://localhost:4000" : "");
 
-  playJarvisSound("execute");
-
-  // Attempt Microsoft Edge Salomé Neural (es-CO-SalomeNeural) high-def voice
+  // Attempt Microsoft Edge Salomé Neural (es-CO-SalomeNeural) high-def voice if API URL available
   if (API_URL) {
     try {
       const response = await fetch(`${API_URL}/api/tts`, {

@@ -20,17 +20,7 @@ export default function JarvisTourOverlay() {
     return () => unsubscribe();
   }, []);
 
-  if (!tourState.active) return null;
-
-  const { currentStepIndex, totalSteps } = tourState;
-  const progressPercent = ((currentStepIndex + 1) / totalSteps) * 100;
-
-  return (
-    <div className="fixed top-0 left-0 right-0 z-50 h-[2.5px] bg-black/30 pointer-events-none">
-      <div
-        className="h-full bg-gradient-to-r from-[#33c2cc] via-[#00f3ff] to-[#ffab00] transition-all duration-700 ease-out shadow-[0_0_12px_#00f3ff]"
-        style={{ width: `${progressPercent}%` }}
-      />
-    </div>
-  );
+  // No duplicate top line: only Navbar's single progress bar is used on the site
+  return null;
 }
+
