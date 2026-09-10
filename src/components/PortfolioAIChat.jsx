@@ -250,6 +250,19 @@ const PortfolioAIChat = () => {
       lang: i18n.language,
     });
 
+    if (intent.type === "STOP_TOUR") {
+      const stopMsg = i18n.language.startsWith("en")
+        ? "Stopping the guided tour."
+        : "Entendido. Tour guiado detenido.";
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: stopMsg },
+      ]);
+      setLoading(false);
+      return;
+    }
+
     if (intent.type === "START_TOUR") {
       const tourMsg = i18n.language.startsWith("en")
         ? "Starting the J.A.R.V.I.S. AI Co-Pilot guided tour..."
@@ -360,6 +373,19 @@ const PortfolioAIChat = () => {
       changeLanguage: (lang) => i18n.changeLanguage(lang),
       lang: i18n.language,
     });
+
+    if (intent.type === "STOP_TOUR") {
+      const stopMsg = i18n.language.startsWith("en")
+        ? "Stopping the guided tour."
+        : "Entendido. Tour guiado detenido.";
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: stopMsg },
+      ]);
+      setLoading(false);
+      return;
+    }
 
     if (intent.type === "START_TOUR") {
       const tourMsg = i18n.language.startsWith("en")

@@ -182,7 +182,27 @@ export const parseJarvisIntent = (text = "") => {
     return { type: "OPEN_LIVE_CHAT", speechKey: "jarvis.actions.liveChat" };
   }
 
-  // 11. Guided Tour Intents
+  // 11. Guided Tour & Control Intents
+  if (
+    query.includes("detente") ||
+    query.includes("deten") ||
+    query.includes("detener") ||
+    query.includes("para tour") ||
+    query.includes("cancelar tour") ||
+    query.includes("stop tour") ||
+    query.includes("salir tour")
+  ) {
+    return { type: "STOP_TOUR", speechKey: "jarvis.actions.stopTour" };
+  }
+
+  if (query.includes("pausa") || query.includes("pausar") || query.includes("pause")) {
+    return { type: "PAUSE_TOUR", speechKey: "jarvis.actions.pauseTour" };
+  }
+
+  if (query.includes("continua") || query.includes("reanuda") || query.includes("resume")) {
+    return { type: "RESUME_TOUR", speechKey: "jarvis.actions.resumeTour" };
+  }
+
   if (
     query.includes("tour") ||
     query.includes("recorrido") ||
@@ -210,6 +230,15 @@ export const executeJarvisAction = (action, helpers = {}) => {
   if (!action || !action.type) return;
 
   switch (action.type) {
+    case "STOP_TOUR": {
+      jarvisTour.stopTour();
+      break;
+    }
+    case "PAUSE_TOUR":
+    case "RESUME_TOUR": {
+      jarvisTour.togglePause();
+      break;
+    }
     case "START_TOUR": {
       jarvisTour.startTour(helpers.lang || "es");
       break;

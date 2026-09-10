@@ -3,13 +3,12 @@ import { jarvisTour } from "../lib/jarvisTour";
 
 /**
  * JarvisTourOverlay
- * Ultra-modern 2026 Floating Co-Pilot Tour Control Dock
+ * Ultra-clean 2026 Hands-Free Voice Co-Pilot HUD
  * 
  * Features:
- * - Zero top screen obstruction: top headers and content remain 100% clean and visible.
- * - Anchors seamlessly near the floating 3D JARVIS Hologram Avatar at the bottom-right.
- * - Compact glassmorphic holographic subtitle bubble with typing sound waves.
- * - Sleek micro controls (Prev, Pause/Resume, Next, Exit).
+ * - NO dialogue box / NO modal card: 100% unobstructed screen visibility.
+ * - Subtle 2px neon cyan progress laser line at the top edge of the viewport.
+ * - Minimal floating micro-pill next to the 3D JARVIS Hologram Avatar.
  */
 
 export default function JarvisTourOverlay() {
@@ -24,104 +23,42 @@ export default function JarvisTourOverlay() {
 
   if (!tourState.active) return null;
 
-  const { currentStep, currentStepIndex, totalSteps, paused, isSpeaking, lang } = tourState;
+  const { currentStepIndex, totalSteps, lang } = tourState;
   const isEn = lang === "en";
   const progressPercent = ((currentStepIndex + 1) / totalSteps) * 100;
 
   return (
-    <div className="fixed z-50 bottom-24 right-5 sm:right-6 w-[min(92vw,24rem)] select-none pointer-events-auto transition-all duration-300 animate-fade-in">
-      {/* Sleek Floating Glassmorphic Holographic Dock */}
-      <div className="relative flex flex-col gap-2.5 p-3.5 rounded-2xl border border-[#00f3ff]/40 bg-[#030412]/92 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,243,255,0.25)] overflow-hidden">
-        {/* Top Glowing Laser Accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#00f3ff] to-transparent animate-pulse" />
+    <>
+      {/* 1. Top Edge Laser Progress Line */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-black/40 pointer-events-none">
+        <div
+          className="h-full bg-gradient-to-r from-[#33c2cc] via-[#00f3ff] to-[#ffab00] transition-all duration-700 ease-out shadow-[0_0_12px_#00f3ff]"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
 
-        {/* Step Badge & Micro Controls Row */}
-        <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-2">
-          {/* Left: Step Info */}
-          <div className="flex items-center gap-2">
-            <span className="relative flex size-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f3ff] opacity-75"></span>
-              <span className="relative inline-flex rounded-full size-2 bg-[#00f3ff]"></span>
-            </span>
-            <span className="text-[11px] font-mono font-bold tracking-wider text-[#00f3ff] uppercase">
-              {currentStep ? (isEn ? currentStep.titleEn : currentStep.titleEs) : "Tour Guiado"}
-            </span>
-          </div>
-
-          {/* Right: Micro Controls */}
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => jarvisTour.prevStep()}
-              disabled={currentStepIndex === 0}
-              className="px-2 py-0.5 rounded border border-white/10 bg-white/5 text-[10px] font-mono text-neutral-300 hover:text-white hover:border-[#00f3ff]/60 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-              title={isEn ? "Previous Step" : "Paso Anterior"}
-            >
-              ◄
-            </button>
-
-            <button
-              type="button"
-              onClick={() => jarvisTour.togglePause()}
-              className={`px-2 py-0.5 rounded border text-[10px] font-mono font-bold transition-all cursor-pointer ${
-                paused
-                  ? "border-amber-500/60 bg-amber-500/20 text-amber-300"
-                  : "border-[#00f3ff]/60 bg-[#00f3ff]/15 text-cyan-300"
-              }`}
-            >
-              {paused ? (isEn ? "▶ Reanudar" : "▶ Reanudar") : (isEn ? "⏸ Pausar" : "⏸ Pausar")}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => jarvisTour.nextStep()}
-              disabled={currentStepIndex === totalSteps - 1}
-              className="px-2 py-0.5 rounded border border-white/10 bg-white/5 text-[10px] font-mono text-neutral-300 hover:text-white hover:border-[#00f3ff]/60 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer transition-colors"
-              title={isEn ? "Next Step" : "Siguiente Paso"}
-            >
-              ►
-            </button>
-
-            <button
-              type="button"
-              onClick={() => jarvisTour.stopTour()}
-              className="px-2 py-0.5 rounded border border-red-500/40 bg-red-500/15 text-[10px] font-mono font-bold text-red-400 hover:bg-red-500/30 cursor-pointer transition-colors"
-              title={isEn ? "Exit Guided Tour" : "Finalizar Tour"}
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-
-        {/* Live Subtitle Narration Text */}
-        <div className="flex items-start gap-2.5 text-xs text-neutral-100 font-sans leading-relaxed">
-          {isSpeaking && (
-            <div className="jarvis-waveform flex items-center gap-0.5 h-3.5 mt-0.5 shrink-0">
-              <span />
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-          )}
-          <p className="flex-1 text-pretty">
-            {currentStep ? (isEn ? currentStep.speechEn : currentStep.speechEs) : ""}
-          </p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="flex items-center gap-2 pt-1">
-          <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden relative">
-            <div
-              className="h-full bg-gradient-to-r from-[#33c2cc] to-[#00f3ff] transition-all duration-500 shadow-[0_0_8px_#00f3ff]"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-          <span className="text-[9px] font-mono font-bold text-[#00f3ff]">
-            {currentStepIndex + 1}/{totalSteps}
+      {/* 2. Sleek Micro Pill next to the 3D Hologram Avatar at Bottom Right */}
+      <div className="fixed z-50 bottom-24 right-5 sm:right-6 select-none pointer-events-auto transition-all duration-300 animate-fade-in">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00f3ff]/50 bg-[#030412]/85 backdrop-blur-md shadow-[0_0_20px_rgba(0,243,255,0.3)]">
+          <span className="relative flex size-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f3ff] opacity-75"></span>
+            <span className="relative inline-flex rounded-full size-2 bg-[#00f3ff]"></span>
           </span>
+
+          <span className="text-[10px] font-mono font-bold text-cyan-300">
+            {isEn ? "JARVIS VOICE TOUR" : "JARVIS EN VIVO"} ● {currentStepIndex + 1}/{totalSteps}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => jarvisTour.stopTour()}
+            className="ml-1 px-1.5 py-0.5 rounded-full border border-red-500/40 bg-red-500/20 text-[9px] font-mono font-bold text-red-300 hover:bg-red-500/40 cursor-pointer transition-colors"
+            title={isEn ? "Say 'Jarvis stop' or click to exit" : "Di 'Jarvis detente' o haz clic para salir"}
+          >
+            ✕ {isEn ? "Stop" : "Detener"}
+          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
