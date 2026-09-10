@@ -2,8 +2,11 @@ import { playJarvisSound, speakJarvis, stopJarvisSpeech } from "./jarvisSpeech";
 
 /**
  * J.A.R.V.I.S. Voice Co-Pilot & Guided Tour Engine
- * Automates smooth section scrolling, synchronized speech narration,
- * multi-language support (ES/EN), and real-time state broadcasts.
+ * Features:
+ * - Hands-free continuous wake-word voice command recognition ("Jarvis detente", "para", "pausa").
+ * - Auto-scrolling section walkthrough with centered alignment.
+ * - Bilingual narration (ES/EN).
+ * - Zero screen obstruction.
  */
 
 export const TOUR_STEPS = [
@@ -12,8 +15,6 @@ export const TOUR_STEPS = [
     targetId: "hero",
     titleEs: "1. Bienvenido al Portafolio",
     titleEn: "1. Welcome to the Portfolio",
-    badgeEs: "CO-PILOTO IA ● INICIO",
-    badgeEn: "AI CO-PILOT ● HOME",
     speechEs:
       "¡Bienvenido al portafolio de Julián! Soy J.A.R.V.I.S., su asistente de Inteligencia Artificial. Permíteme acompañarte en este recorrido guiado por sus mejores proyectos y trayectoria profesional.",
     speechEn:
@@ -24,8 +25,6 @@ export const TOUR_STEPS = [
     targetId: "about",
     titleEs: "2. Sobre Mí & Habilidades",
     titleEn: "2. About & Tech Stack",
-    badgeEs: "STACK & INGENIERÍA",
-    badgeEn: "STACK & ENGINEERING",
     speechEs:
       "Julián es Desarrollador Full Stack con sólidas competencias en React, .NET, Flutter, Node y arquitecturas cloud. Se enfoca en crear código limpio, seguro y altamente escalable.",
     speechEn:
@@ -36,8 +35,6 @@ export const TOUR_STEPS = [
     targetId: "projects",
     titleEs: "3. Proyectos Destacados",
     titleEn: "3. Featured Projects",
-    badgeEs: "SOLUCIONES & PORTAFOLIO",
-    badgeEn: "SOLUTIONS & PORTFOLIO",
     speechEs:
       "Aquí puedes explorar sus proyectos más destacados, incluyendo aplicaciones móviles en Flutter, plataformas web empresariales en React y sistemas de información geográfica en tiempo real.",
     speechEn:
@@ -48,8 +45,6 @@ export const TOUR_STEPS = [
     targetId: "experiences",
     titleEs: "4. Trayectoria Profesional",
     titleEn: "4. Work Experience",
-    badgeEs: "EXPERIENCIA & LIDERAZGO",
-    badgeEn: "EXPERIENCE & LEADERSHIP",
     speechEs:
       "En su trayectoria profesional, Julián ha liderado el desarrollo de software para empresas de tecnología e innovación, optimizando procesos clave y construyendo soluciones digitales robustas.",
     speechEn:
@@ -60,8 +55,6 @@ export const TOUR_STEPS = [
     targetId: "recruiter",
     titleEs: "5. Centro de Reclutadores & Contacto",
     titleEn: "5. Recruiter Hub & Contact",
-    badgeEs: "RECLUTADORES & CV",
-    badgeEn: "RECRUITERS & RESUME",
     speechEs:
       "Si eres reclutador o deseas colaborar con él, puedes descargar su Hoja de Vida en PDF en español o inglés, o enviarle un mensaje directo por WhatsApp, LinkedIn o correo. ¡Gracias por tu visita!",
     speechEn:
@@ -78,11 +71,11 @@ class JarvisTourController {
     this.lang = "es";
     this.isSpeaking = false;
     this.scrollTimeout = null;
+    this.recognizer = null;
   }
 
   subscribe(listener) {
     this.listeners.add(listener);
-    // Notify immediate state
     listener(this.getState());
     return () => this.listeners.delete(listener);
   }
@@ -117,7 +110,99 @@ class JarvisTourController {
     playJarvisSound("activate");
     this.notify();
 
+    // Start continuous hands-free voice command listener
+    this.startVoiceListener();
+
     this.executeCurrentStep();
+  }
+
+  startVoiceListener() {
+    const SpeechClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechClass) return;
+
+    try {
+      if (this.recognizer) {
+        try { this.recognizer.stop(); } catch (e) {}
+      }
+
+      const recognition = new SpeechClass();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = this.lang.startsWith("en") ? "en-US" : "es-ES";
+
+      recognition.onresult = (event) => {
+        if (!this.active) return;
+        const results = event.results;
+        for (let i = event.resultIndex; i < results.length; i++) {
+          const text = (results[i][0]?.transcript || "").toLowerCase().trim();
+
+          // Detect Stop Commands ("detente", "para", "detener", "stop", "cancela", "salir")
+          if (
+            text.includes("detente") ||
+            text.includes("deten") ||
+            text.includes("detener") ||
+            text.includes("para") ||
+            text.includes("parar") ||
+            text.includes("stop") ||
+            text.includes("cancelar") ||
+            text.includes("cancela") ||
+            text.includes("salir")
+          ) {
+            this.stopTour();
+            speakJarvis(
+              this.lang === "en" ? "Stopping guided tour." : "Entendido, tour detenido.",
+              this.lang
+            );
+            return;
+          }
+
+          // Detect Pause Commands
+          if (text.includes("pausa") || text.includes("pause") || text.includes("pausar")) {
+            if (!this.paused) this.togglePause();
+            return;
+          }
+
+          // Detect Resume Commands
+          if (text.includes("continua") || text.includes("reanuda") || text.includes("resume")) {
+            if (this.paused) this.togglePause();
+            return;
+          }
+        }
+      };
+
+      recognition.onerror = (e) => {
+        if (this.active && e.error !== "not-allowed" && e.error !== "aborted") {
+          setTimeout(() => {
+            if (this.active) this.startVoiceListener();
+          }, 1000);
+        }
+      };
+
+      recognition.onend = () => {
+        if (this.active) {
+          setTimeout(() => {
+            if (this.active) {
+              try { recognition.start(); } catch (err) {}
+            }
+          }, 300);
+        }
+      };
+
+      recognition.start();
+      this.recognizer = recognition;
+    } catch (err) {
+      console.warn("Tour voice listener setup error:", err);
+    }
+  }
+
+  stopVoiceListener() {
+    if (this.recognizer) {
+      try {
+        this.recognizer.onend = null;
+        this.recognizer.stop();
+      } catch (e) {}
+      this.recognizer = null;
+    }
   }
 
   executeCurrentStep() {
@@ -132,7 +217,6 @@ class JarvisTourController {
       return;
     }
 
-    // Highlight section & Smooth scroll
     this.highlightSection(step.targetId);
 
     const el = document.getElementById(step.targetId);
@@ -143,7 +227,6 @@ class JarvisTourController {
     this.isSpeaking = true;
     this.notify();
 
-    // Small delay to allow scroll animation to settle before speech
     this.scrollTimeout = setTimeout(() => {
       if (!this.active || this.paused) return;
 
@@ -154,7 +237,6 @@ class JarvisTourController {
           this.isSpeaking = false;
           this.notify();
 
-          // Auto advance to next step after brief pause if still active and not paused
           if (this.active && !this.paused) {
             setTimeout(() => {
               if (this.active && !this.paused) {
@@ -203,6 +285,8 @@ class JarvisTourController {
 
   stopTour() {
     stopJarvisSpeech();
+    this.stopVoiceListener();
+
     if (this.scrollTimeout) clearTimeout(this.scrollTimeout);
 
     this.active = false;
