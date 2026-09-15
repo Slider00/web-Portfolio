@@ -463,7 +463,7 @@ const RecruiterHub = () => {
               <span>{t("recruiter.fastChannels")}</span>
               <div className="flex gap-4">
                 <a
-                  href="mailto:julian.correa.556@unisabaneta.edu.co"
+                  href="mailto:julian-jcs14@hotmail.com"
                   className="hover:text-aqua transition underline"
                 >
                   Email

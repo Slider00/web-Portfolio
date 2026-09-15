@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 const CopyEmailButton = () => {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
-  const email = "julian.correa.556@unisabaneta.edu.co";
+  const email = "julian-jcs14@hotmail.com";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(email);
