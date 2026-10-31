@@ -292,6 +292,36 @@ export const myProjects = [
       { id: 4, name: "Node.js", path: `${base}assets/logos/nodejs.svg` },
     ],
   },
+  {
+    id: 14,
+    title: "projects.exclusiveSpa.title",
+    description: "projects.exclusiveSpa.description",
+    subDescription: [
+      "projects.exclusiveSpa.subDescription0",
+      "projects.exclusiveSpa.subDescription1",
+      "projects.exclusiveSpa.subDescription2",
+    ],
+    href: "",
+    logo: "",
+    image: `${base}assets/projects/exclusive-1.png`,
+    images: [
+      `${base}assets/projects/exclusive-video.mp4`,
+      `${base}assets/projects/exclusive-1.png`,
+      `${base}assets/projects/exclusive-2.png`,
+      `${base}assets/projects/exclusive-3.png`,
+      `${base}assets/projects/exclusive-4.png`,
+      `${base}assets/projects/exclusive-5.png`,
+      `${base}assets/projects/exclusive-6.png`,
+      `${base}assets/projects/exclusive-7.png`,
+      `${base}assets/projects/exclusive-8.png`,
+    ],
+    tags: [
+      { id: 1, name: "React", path: `${base}assets/logos/react.svg` },
+      { id: 2, name: "Next.js", path: `${base}assets/logos/nextjs.svg` },
+      { id: 3, name: "TailwindCSS", path: `${base}assets/logos/tailwindcss.svg` },
+      { id: 4, name: "Node.js", path: `${base}assets/logos/nodejs.svg` },
+    ],
+  },
 ];
 
 export const mySocials = [

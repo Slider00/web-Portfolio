@@ -142,6 +142,13 @@ const resources = {
           subDescription0: "Automatic real-time background synchronization of seismic events from the official USGS (US Geological Survey) feed for Colombia, rendered with dynamic magnitude pulse animations on the interactive map.",
           subDescription1: "Citizen and rescue team reporting via map double-click, opening precise forms to register affected people, damaged infrastructure, and required emergency supplies.",
           subDescription2: "Automated Red Cross supply computation algorithms (5L water/day, 2 meals/day, 1 family tent & hygiene kit per 4 people) with national consolidated disaster dashboard tracking real-time delivery progress."
+        },
+        exclusiveSpa: {
+          title: "EXCLUSIVE - Web Platform & SaaS Admin System for Vehicle Spa",
+          description: "Comprehensive web platform and administrative SaaS management system for a high-end vehicle and motorcycle detailing spa center (EXCLUSIVE Detallado de Vehículos & Spa).",
+          subDescription0: "Client-facing web portal featuring rapid 30-second appointment booking, live workshop bay camera streaming (CAM 01 Rinse, CAM 02 Snow Foam), and interactive detailing service catalog.",
+          subDescription1: "Real-time vehicle status tracking module searchable by license plate or booking reference code, displaying live progression stages (Check-in, Pre-wash, Decontamination, Detailing, Ready) and assigned bay.",
+          subDescription2: "SaaS Admin management dashboard for staff and management: live bay occupancy monitoring, financial ledger (invoiced vs collected revenue), categorized petty cash expense logging, and walk-in vehicle admission."
         }
       },
       experiences: {
@@ -270,7 +277,7 @@ const resources = {
         },
         actions: {
           tour: "Starting J.A.R.V.I.S. AI Co-Pilot Guided Tour.",
-          projects: "Presenting Julian's featured projects: high-impact solutions such as the Real-Time GIS Emergency Portal, mobile social apps in Flutter, payment gateways, and backend architectures. Feel free to explore them on screen.",
+          projects: "Presenting Julian's featured projects: high-impact solutions such as the Real-Time GIS Emergency Portal, vehicle detailing & spa SaaS platform, mobile social apps in Flutter, payment gateways, and backend architectures. Feel free to explore them on screen.",
           experience: "Navigating to Julian's work experience timeline.",
           certifications: "Navigating to official certifications and degrees.",
           recruiter: "Opening the Recruiter Hub vacancy simulator.",
@@ -424,6 +431,13 @@ const resources = {
           subDescription0: "Sincronización automática de sismos en segundo plano desde el feed oficial de la USGS (Servicio Geológico de EE. UU.) para Colombia y datos locales de prueba, representados en el mapa con marcadores animados de ondas sísmicas según la gravedad de su magnitud.",
           subDescription1: "Creación de reportes ciudadanos y de organismos de rescate (Defensa Civil, Bomberos, Cruz Roja) mediante doble clic en el mapa para registrar damnificados, viviendas afectadas y necesidades en terreno.",
           subDescription2: "Cómputo automático de suministros mediante algoritmos basados en proporciones de la Cruz Roja (5L agua/día, 2 raciones comida/día, 1 carpa y kit de higiene por cada 4 personas), junto a un tablero de consolidado nacional que rastrea la ayuda entregada en tiempo real."
+        },
+        exclusiveSpa: {
+          title: "EXCLUSIVE - Plataforma Web & Sistema SaaS para Spa Automotriz",
+          description: "Plataforma web integral y sistema SaaS administrativo para un centro especializado en estética y detallado de vehículos y motocicletas (EXCLUSIVE Detallado de Vehículos & Spa).",
+          subDescription0: "Portal web de clientes con agendamiento ágil de citas en 30 segundos, transmisión de cámaras en vivo de las bahías de lavado (CAM 01 Enjuague, CAM 02 Espumado Snow Foam) y catálogo interactivo de servicios.",
+          subDescription1: "Módulo de consulta y rastreo en tiempo real del estado del vehículo mediante placa o código de reserva, mostrando el paso a paso del servicio (Recepción, Prelavado, Descontaminado, Detallado y Entrega) y bahía asignada.",
+          subDescription2: "Panel administrativo SaaS para directores y operativos: control de bahías, métricas de vehículos atendidos, balance financiero (ingresos facturados vs cobrados), registro de gastos de caja menor categorizados e ingreso de vehículos sin cita."
         }
       },
       experiences: {
@@ -552,7 +566,7 @@ const resources = {
         },
         actions: {
           tour: "Iniciando tour guiado con voz de J.A.R.V.I.S.",
-          projects: "Te presento los proyectos destacados de Julián: soluciones de alto impacto como el Portal SIG de Emergencias en tiempo real, redes sociales móviles en Flutter, pasarelas de pago y arquitecturas backend. Puedes explorarlos en pantalla.",
+          projects: "Te presento los proyectos destacados de Julián: soluciones de alto impacto como el Portal SIG de Emergencias en tiempo real, la plataforma SaaS para spa automotriz, redes sociales móviles en Flutter, pasarelas de pago y arquitecturas backend. Puedes explorarlos en pantalla.",
           experience: "Desplazándome a la trayectoria de experiencia laboral.",
           certifications: "Desplazándome a títulos y certificaciones oficiales.",
           recruiter: "Abriendo el simulador del Centro de Reclutadores.",
