@@ -314,6 +314,8 @@ export const myProjects = [
       `${base}assets/projects/exclusive-6.png`,
       `${base}assets/projects/exclusive-7.png`,
       `${base}assets/projects/exclusive-8.png`,
+      `${base}assets/projects/exclusive-9.png`,
+      `${base}assets/projects/exclusive-10.png`,
     ],
     tags: [
       { id: 1, name: "React", path: `${base}assets/logos/react.svg` },
