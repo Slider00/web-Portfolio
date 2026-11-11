@@ -306,7 +306,7 @@ const playAudioBlob = async (audioBlob, cleanedText, lang, callbacks) => {
   await audio.play();
 };
 
-export const speakJarvis = async (text, lang = "es", callbacks = {}, options = {}) => {
+export const speakJarvis = async (text, lang = "es", callbacks = {}) => {
   // Cancel any ongoing speech / audio
   stopJarvisSpeech();
 
@@ -318,60 +318,7 @@ export const speakJarvis = async (text, lang = "es", callbacks = {}, options = {
 
   playJarvisSound("execute");
 
-  // 1. If already pre-cached in RAM, play HD Neural Voice in 0ms!
-  const cacheKey = getCacheKey(cleanedText, lang);
-  if (ttsBlobCache.has(cacheKey)) {
-    try {
-      await playAudioBlob(ttsBlobCache.get(cacheKey), cleanedText, lang, callbacks);
-      return;
-    } catch (e) {
-      // If autoplay blocked, fall through to local SpeechSynthesis
-    }
-  }
-
-  // 2. Fast zero-latency path when preferLocal is requested (Guided Tour / Instant Greeting)
-  if (options.preferLocal) {
-    fallbackSpeechSynthesis(cleanedText, lang, callbacks);
-    return;
-  }
-
-  const API_URL = getApiUrl();
-
-  // 3. Attempt Microsoft Edge Neural HD voice with a strict fast timeout (max 1.2s)
-  // so a sleeping free-tier server NEVER delays Jarvis from speaking immediately
-  if (API_URL) {
-    const timeoutMs = options.timeoutMs ?? 1200;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-    try {
-      const response = await fetch(`${API_URL}/api/tts`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: cleanedText,
-          voice: lang.startsWith("en") ? "en-US-AvaNeural" : "es-CO-SalomeNeural",
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(timer);
-
-      if (response.ok) {
-        const audioBlob = await response.blob();
-        if (audioBlob && audioBlob.size > 0) {
-          ttsBlobCache.set(cacheKey, audioBlob);
-          await playAudioBlob(audioBlob, cleanedText, lang, callbacks);
-          return;
-        }
-      }
-    } catch (e) {
-      clearTimeout(timer);
-      // Warm up the cache in the background for next time while playing local voice now
-      preloadJarvisTTS(text, lang);
-    }
-  }
-
-  // 4. Instant 0ms fallback to browser SpeechSynthesis
+  // Direct 0ms local SpeechSynthesis (avoids 500 errors and latency from cloud Edge-TTS endpoints)
   fallbackSpeechSynthesis(cleanedText, lang, callbacks);
 };
 

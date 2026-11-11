@@ -6,7 +6,6 @@ import { executeJarvisAction, parseJarvisIntent } from "../lib/jarvisActions";
 import {
   initJarvisRecognizer,
   playJarvisSound,
-  preloadJarvisTTS,
   speakJarvis,
   stopJarvisSpeech,
 } from "../lib/jarvisSpeech";
@@ -572,14 +571,6 @@ const PortfolioAIChat = () => {
     sessionStorage.getItem("portfolio_chat_greeted") === "true"
   );
 
-  // Pre-warm free-tier backend & pre-cache the greeting audio in RAM on page load
-  useEffect(() => {
-    if (!hasGreetedRef.current && !soundMuted) {
-      const greeting = getTimeBasedGreeting(i18n.language);
-      preloadJarvisTTS(greeting, i18n.language);
-    }
-  }, [i18n.language, soundMuted]);
-
   const handleToggleOpen = () => {
     const nextOpen = !open;
     setOpen(nextOpen);
@@ -601,8 +592,7 @@ const PortfolioAIChat = () => {
         playJarvisSound("activate");
 
         if (!soundMuted) {
-          // Plays from RAM cache in 0ms if preloaded, or falls back to local voice immediately
-          speakJarvis(greeting, i18n.language, {}, { preferLocal: true });
+          speakJarvis(greeting, i18n.language);
         }
       }
     } else {
