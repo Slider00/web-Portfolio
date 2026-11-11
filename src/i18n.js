@@ -48,15 +48,18 @@ const resources = {
         rights: "© 2025 Julian Correa. All rights reserved."
       },
       hero: {
+        badge: "Available for new projects",
         wordSecure: "Modern",
         wordModern: "Efficient",
         wordScalable: "Scalable",
         greeting: "Hi, I'm Julian",
-        titleCraftingPart1: "Full-Stack Developer",
+        titleCraftingPart1: "Software Developer",
         titleCraftingPart2: "Focused on Creating",
         titleWebSolutions: "Digital Experiences",
         titleBuilding: "Creating",
-        titleWebApps: "Digital Experiences"
+        titleWebApps: "Digital Experiences",
+        ctaProjects: "Explore Projects",
+        ctaContact: "Let's Talk"
       },
       copyEmail: {
         copied: "Email has Copied",
@@ -337,15 +340,18 @@ const resources = {
         rights: "© 2025 Julian Correa. Todos los derechos reservados."
       },
       hero: {
+        badge: "Disponible para proyectos",
         wordSecure: "Modernas",
         wordModern: "Eficientes",
         wordScalable: "Escalables",
         greeting: "Hola, soy Julian",
-        titleCraftingPart1: "Desarrollador Full-Stack",
+        titleCraftingPart1: "Desarrollador de Software",
         titleCraftingPart2: "Enfocado en Crear",
         titleWebSolutions: "Experiencias Digitales",
         titleBuilding: "Creando",
-        titleWebApps: "Experiencias Digitales"
+        titleWebApps: "Experiencias Digitales",
+        ctaProjects: "Ver Proyectos",
+        ctaContact: "Hablemos"
       },
       copyEmail: {
         copied: "Correo Copiado",

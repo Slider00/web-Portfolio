@@ -1,11 +1,23 @@
-// J.A.R.V.I.S. Audio & Speech Engine (Web Speech API + Web Audio API)
+// J.A.R.V.I.S. Audio & Speech Engine (Web Speech API + Web Audio API + Pre-cached Edge TTS)
 
-// 1. Web Audio API Sci-Fi Sound Synthesizer
+// 1. Web Audio API Sci-Fi Sound Synthesizer (Singleton AudioContext for 0ms latency)
+let sharedAudioCtx = null;
+const getAudioContext = () => {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  if (!sharedAudioCtx || sharedAudioCtx.state === "closed") {
+    sharedAudioCtx = new AudioContextClass();
+  }
+  if (sharedAudioCtx.state === "suspended") {
+    sharedAudioCtx.resume().catch(() => {});
+  }
+  return sharedAudioCtx;
+};
+
 export const playJarvisSound = (type = "activate") => {
   try {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
 
     if (type === "activate") {
@@ -180,7 +192,60 @@ export const cleanTextForSpeech = (text = "") => {
     .trim();
 };
 
-// 3. Speech Synthesis (Microsoft Edge Neural HD Voice Engine + Fallback)
+// 3. In-Memory TTS Audio Cache & Background Pre-warmer (Eliminates Cold-Start Delay)
+const ttsBlobCache = new Map();
+const pendingPreloads = new Map();
+
+const getApiUrl = () =>
+  import.meta.env.VITE_AI_API_URL ||
+  (import.meta.env.DEV ? "http://localhost:4000" : "");
+
+const getCacheKey = (cleanedText, lang) => {
+  const voice = lang.startsWith("en") ? "en-US-AvaNeural" : "es-CO-SalomeNeural";
+  return `${voice}::${cleanedText}`;
+};
+
+/**
+ * Pre-fetches and caches the TTS audio blob in the background on page load,
+ * simultaneously waking up free-tier backends (Vercel/Render/Railway) before the user clicks.
+ */
+export const preloadJarvisTTS = async (text, lang = "es") => {
+  const API_URL = getApiUrl();
+  if (!API_URL) return null;
+
+  const cleanedText = cleanTextForSpeech(text);
+  if (!cleanedText) return null;
+
+  const key = getCacheKey(cleanedText, lang);
+  if (ttsBlobCache.has(key)) return ttsBlobCache.get(key);
+  if (pendingPreloads.has(key)) return pendingPreloads.get(key);
+
+  const voice = lang.startsWith("en") ? "en-US-AvaNeural" : "es-CO-SalomeNeural";
+
+  const fetchPromise = fetch(`${API_URL}/api/tts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: cleanedText, voice }),
+  })
+    .then(async (res) => {
+      if (!res.ok) return null;
+      const blob = await res.blob();
+      if (blob && blob.size > 0) {
+        ttsBlobCache.set(key, blob);
+        return blob;
+      }
+      return null;
+    })
+    .catch(() => null)
+    .finally(() => {
+      pendingPreloads.delete(key);
+    });
+
+  pendingPreloads.set(key, fetchPromise);
+  return fetchPromise;
+};
+
+// 4. Speech Synthesis (Instant Cache -> Fast Edge Neural HD with Timeout -> 0ms Local Fallback)
 let currentUtterance = null;
 let currentAudio = null;
 
@@ -189,6 +254,9 @@ const fallbackSpeechSynthesis = (cleanedText, lang, callbacks) => {
     callbacks.onEnd?.();
     return;
   }
+
+  // Cancel any stuck queue in Chrome/Safari before speaking immediately
+  window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(cleanedText);
   currentUtterance = utterance;
@@ -216,6 +284,28 @@ const fallbackSpeechSynthesis = (cleanedText, lang, callbacks) => {
   window.speechSynthesis.speak(utterance);
 };
 
+const playAudioBlob = async (audioBlob, cleanedText, lang, callbacks) => {
+  const audioUrl = URL.createObjectURL(audioBlob);
+  const audio = new Audio(audioUrl);
+  currentAudio = audio;
+
+  callbacks.onStart?.();
+
+  audio.onended = () => {
+    currentAudio = null;
+    URL.revokeObjectURL(audioUrl);
+    callbacks.onEnd?.();
+  };
+
+  audio.onerror = () => {
+    currentAudio = null;
+    URL.revokeObjectURL(audioUrl);
+    fallbackSpeechSynthesis(cleanedText, lang, callbacks);
+  };
+
+  await audio.play();
+};
+
 export const speakJarvis = async (text, lang = "es", callbacks = {}, options = {}) => {
   // Cancel any ongoing speech / audio
   stopJarvisSpeech();
@@ -228,18 +318,32 @@ export const speakJarvis = async (text, lang = "es", callbacks = {}, options = {
 
   playJarvisSound("execute");
 
-  // Fast zero-latency path for guided tour and Vercel free tier efficiency
+  // 1. If already pre-cached in RAM, play HD Neural Voice in 0ms!
+  const cacheKey = getCacheKey(cleanedText, lang);
+  if (ttsBlobCache.has(cacheKey)) {
+    try {
+      await playAudioBlob(ttsBlobCache.get(cacheKey), cleanedText, lang, callbacks);
+      return;
+    } catch (e) {
+      // If autoplay blocked, fall through to local SpeechSynthesis
+    }
+  }
+
+  // 2. Fast zero-latency path when preferLocal is requested (Guided Tour / Instant Greeting)
   if (options.preferLocal) {
     fallbackSpeechSynthesis(cleanedText, lang, callbacks);
     return;
   }
 
-  const API_URL =
-    import.meta.env.VITE_AI_API_URL ||
-    (import.meta.env.DEV ? "http://localhost:4000" : "");
+  const API_URL = getApiUrl();
 
-  // Attempt Microsoft Edge Salomé Neural (es-CO-SalomeNeural) high-def voice if API URL available
+  // 3. Attempt Microsoft Edge Neural HD voice with a strict fast timeout (max 1.2s)
+  // so a sleeping free-tier server NEVER delays Jarvis from speaking immediately
   if (API_URL) {
+    const timeoutMs = options.timeoutMs ?? 1200;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
     try {
       const response = await fetch(`${API_URL}/api/tts`, {
         method: "POST",
@@ -248,37 +352,26 @@ export const speakJarvis = async (text, lang = "es", callbacks = {}, options = {
           text: cleanedText,
           voice: lang.startsWith("en") ? "en-US-AvaNeural" : "es-CO-SalomeNeural",
         }),
+        signal: controller.signal,
       });
+      clearTimeout(timer);
 
       if (response.ok) {
         const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        currentAudio = audio;
-
-        callbacks.onStart?.();
-
-        audio.onended = () => {
-          currentAudio = null;
-          URL.revokeObjectURL(audioUrl);
-          callbacks.onEnd?.();
-        };
-
-        audio.onerror = () => {
-          currentAudio = null;
-          URL.revokeObjectURL(audioUrl);
-          fallbackSpeechSynthesis(cleanedText, lang, callbacks);
-        };
-
-        await audio.play();
-        return;
+        if (audioBlob && audioBlob.size > 0) {
+          ttsBlobCache.set(cacheKey, audioBlob);
+          await playAudioBlob(audioBlob, cleanedText, lang, callbacks);
+          return;
+        }
       }
     } catch (e) {
-      console.warn("Edge Neural TTS backend offline, using browser fallback:", e);
+      clearTimeout(timer);
+      // Warm up the cache in the background for next time while playing local voice now
+      preloadJarvisTTS(text, lang);
     }
   }
 
-  // Fallback to browser SpeechSynthesis
+  // 4. Instant 0ms fallback to browser SpeechSynthesis
   fallbackSpeechSynthesis(cleanedText, lang, callbacks);
 };
 
@@ -294,7 +387,7 @@ export const stopJarvisSpeech = () => {
   }
 };
 
-// 4. Speech Recognition (Microphone Voice Commands)
+// 5. Speech Recognition (Microphone Voice Commands)
 export const initJarvisRecognizer = ({ onResult, onError, onEnd, lang = "es" }) => {
   const SpeechRecognitionClass =
     window.SpeechRecognition || window.webkitSpeechRecognition;
