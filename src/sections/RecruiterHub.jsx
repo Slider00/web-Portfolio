@@ -24,38 +24,53 @@ ChartJS.register(
 const SKILLS_LIST = [
   { id: "react", name: "React.js / Next.js", category: "Frontend" },
   { id: "javascript", name: "JS / TypeScript", category: "Frontend" },
+  { id: "angular", name: "Angular", category: "Frontend" },
   { id: "tailwindcss", name: "Tailwind CSS / Sass", category: "Frontend" },
+  { id: "web3", name: "Web3 / Blockchain", category: "Frontend" },
   { id: "flutter", name: "Flutter / Dart", category: "Mobile" },
   { id: "reactnative", name: "React Native / Expo", category: "Mobile" },
+  { id: "ionic", name: "Ionic", category: "Mobile" },
   { id: "nestjs", name: "NestJS / Node.js", category: "Backend" },
-  { id: "mongodb", name: "MongoDB / Mongoose", category: "Backend" },
+  { id: "mongodb", name: "MongoDB / SQL / MySQL", category: "Backend" },
   { id: "php", name: "PHP / REST APIs", category: "Backend" },
+  { id: "swagger", name: "Swagger / OpenAPI", category: "Backend" },
+  { id: "cloud", name: "AWS / Docker / Vercel", category: "Herramientas" },
   { id: "git", name: "Git / Pipelines CI-CD", category: "Herramientas" },
+  { id: "uxscrum", name: "Figma UI/UX & Scrum", category: "Herramientas" },
 ];
 
 const PRESETS = {
   frontend: {
     nameKey: "recruiter.presetFrontend",
-    skills: ["react", "javascript", "tailwindcss", "git"],
-    experience: "mid",
+    skills: ["react", "javascript", "angular", "tailwindcss", "web3", "git", "uxscrum"],
+    experience: "senior",
     mode: "remote",
   },
   mobile: {
     nameKey: "recruiter.presetMobile",
-    skills: ["flutter", "javascript", "reactnative", "git"],
-    experience: "mid",
+    skills: ["flutter", "reactnative", "ionic", "javascript", "nestjs", "git"],
+    experience: "senior",
     mode: "remote",
   },
   fullstack: {
     nameKey: "recruiter.presetFullstack",
-    skills: ["react", "javascript", "tailwindcss", "nestjs", "mongodb", "git"],
+    skills: [
+      "react",
+      "javascript",
+      "tailwindcss",
+      "nestjs",
+      "mongodb",
+      "swagger",
+      "cloud",
+      "git",
+    ],
     experience: "senior",
     mode: "remote",
   },
   custom: {
     nameKey: "recruiter.presetCustom",
     skills: [],
-    experience: "mid",
+    experience: "senior",
     mode: "remote",
   },
 };
@@ -96,30 +111,28 @@ const RecruiterHub = () => {
     const totalSkillsSelected = selectedSkills.length;
 
     if (totalSkillsSelected > 0) {
-      // Julian is proficient in all skills listed on his CV
-      const coreMatches = selectedSkills.filter((s) =>
-        ["react", "javascript", "tailwindcss", "flutter", "reactnative", "nestjs", "mongodb", "php", "git"].includes(s)
-      );
+      const allKnownIds = SKILLS_LIST.map((s) => s.id);
+      const coreMatches = selectedSkills.filter((s) => allKnownIds.includes(s));
       score += (coreMatches.length / totalSkillsSelected) * 35;
       score += Math.min(totalSkillsSelected * 2, 5);
     }
 
-    // Años de experiencia (Julián tiene ~5 años desde 2020)
+    // Años de experiencia (Julián cuenta con 6+ años desde 2020)
     if (experience === "junior") {
-      score += 10; // Sobrecualificado, excelente match
+      score += 10;
     } else if (experience === "mid") {
-      score += 10; // Match perfecto
+      score += 10;
     } else if (experience === "senior") {
-      score += 7;  // Apto para roles Senior/Liderazgo inicial
+      score += 10;
     }
 
     // Modalidad
     if (mode === "remote") {
-      score += 10; // Ideal
+      score += 10;
     } else if (mode === "hybrid") {
       score += 8;
     } else {
-      score += 3; // Presencial menos preferido
+      score += 3;
     }
 
     const finalScore = Math.min(Math.round(score), 100);
@@ -143,13 +156,15 @@ const RecruiterHub = () => {
       .map((id) => SKILLS_LIST.find((s) => s.id === id)?.name)
       .filter(Boolean)
       .join(", ");
-    
+
     const translatedMode = t(`recruiter.${mode}`);
-    
+
     return t("recruiter.defaultContactMsg", {
       score: fitResult.score,
       mode: translatedMode,
-      skills: skillNames || (i18n.language === "es" ? "Desarrollo General" : "General Development")
+      skills:
+        skillNames ||
+        (i18n.language === "es" ? "Desarrollo General" : "General Development"),
     });
   }, [selectedSkills, fitResult.score, mode, t, i18n.language]);
 
@@ -161,21 +176,29 @@ const RecruiterHub = () => {
 
   // Configuración de los ejes del Radar Chart
   const radarData = useMemo(() => {
-    // Clasificar las habilidades seleccionadas para dibujar la demanda vs. la capacidad de Julian
-    const categoriesCount = { Frontend: 0, Mobile: 0, Backend: 0, Herramientas: 0 };
+    const categoriesCount = {
+      Frontend: 0,
+      Mobile: 0,
+      Backend: 0,
+      Herramientas: 0,
+    };
     selectedSkills.forEach((id) => {
       const skill = SKILLS_LIST.find((s) => s.id === id);
       if (skill) categoriesCount[skill.category]++;
     });
 
     // Puntuación del trabajo requerido (normalizado sobre 100)
-    const requiredFrontend = Math.min((categoriesCount.Frontend / 3) * 100, 100) || 15;
-    const requiredMobile = Math.min((categoriesCount.Mobile / 2) * 100, 100) || 15;
-    const requiredBackend = Math.min((categoriesCount.Backend / 3) * 100, 100) || 15;
-    const requiredTools = Math.min((categoriesCount.Herramientas / 1) * 100, 100) || 15;
+    const requiredFrontend =
+      Math.min((categoriesCount.Frontend / 3) * 100, 100) || 15;
+    const requiredMobile =
+      Math.min((categoriesCount.Mobile / 2) * 100, 100) || 15;
+    const requiredBackend =
+      Math.min((categoriesCount.Backend / 2.5) * 100, 100) || 15;
+    const requiredTools =
+      Math.min((categoriesCount.Herramientas / 2) * 100, 100) || 15;
 
-    // Perfil de Julián (valores reales basados en su experiencia y proyectos)
-    const julianProfile = [95, 90, 80, 85, 90]; // Frontend, Mobile, Backend, Tools, Soft Skills
+    // Perfil de Julián (valores reales basados en sus 6+ años de experiencia y proyectos)
+    const julianProfile = [98, 94, 88, 90, 95]; // Frontend, Mobile, Backend, Cloud/Tools, Soft Skills
 
     return {
       labels: [
@@ -248,7 +271,7 @@ const RecruiterHub = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.dataset.label}: ${context.raw}%`;
+            return `${context.dataset.label}: ${Math.round(context.raw)}%`;
           },
         },
       },
@@ -260,9 +283,7 @@ const RecruiterHub = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-heading text-white">{t("recruiter.title")}</h2>
-          <p className="subtext mt-2">
-            {t("recruiter.subtitle")}
-          </p>
+          <p className="subtext mt-2">{t("recruiter.subtitle")}</p>
         </div>
         {/* Pulsing Availability Badge */}
         <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full">
@@ -345,7 +366,7 @@ const RecruiterHub = () => {
                       setRolePreset("custom");
                       setExperience(exp);
                     }}
-                    className={`flex-1 text-center py-1.5 rounded-md text-xs font-semibold capitalize transition ${
+                    className={`flex-1 text-center py-1.5 rounded-md text-xs font-semibold capitalize transition cursor-pointer ${
                       experience === exp
                         ? "bg-lavender text-white shadow-sm"
                         : "text-neutral-400 hover:text-white"
@@ -370,7 +391,7 @@ const RecruiterHub = () => {
                       setRolePreset("custom");
                       setMode(m);
                     }}
-                    className={`flex-1 text-center py-1.5 rounded-md text-xs font-semibold capitalize transition ${
+                    className={`flex-1 text-center py-1.5 rounded-md text-xs font-semibold capitalize transition cursor-pointer ${
                       mode === m
                         ? "bg-lavender text-white shadow-sm"
                         : "text-neutral-400 hover:text-white"
@@ -394,7 +415,9 @@ const RecruiterHub = () => {
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-bold text-white">{t("recruiter.scoreTitle")}</h4>
+                <h4 className="text-sm font-bold text-white">
+                  {t("recruiter.scoreTitle")}
+                </h4>
                 <p className="text-xs text-neutral-300 mt-1 leading-relaxed">
                   {fitResult.feedback}
                 </p>

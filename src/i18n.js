@@ -206,7 +206,7 @@ const resources = {
         scoreTitle: "Compatibility Results",
         feedbackExcellent: "Excellent Match! Julián has the technologies and work conditions ideal for your vacancy. Ready to add value from day one.",
         feedbackStrong: "Strong Match. Meets most of your requirements and has great flexibility to adapt to the role quickly.",
-        feedbackModerate: "Moderate Match. Although his core stack varies, his solid foundation in Javascript, C#, and mobile development allows for a successful transition.",
+        feedbackModerate: "Moderate Match. His solid 6+ years foundation in React, Next.js, Angular, Flutter, and NestJS allows for a rapid transition.",
         chartTitle: "📊 Skills Coverage Chart",
         julianCapacity: "Julián Correa (Capacity)",
         yourRequirement: "Your Job Requirement",
@@ -218,11 +218,11 @@ const resources = {
         copiedBtn: "✓ Message Copied",
         fastChannels: "Quick channels:",
         radarLabels: {
-          frontend: "Frontend (React/Vite)",
-          mobile: "Mobile (Flutter/Ionic)",
-          backend: "Backend (.NET/PHP)",
-          tools: "Tools (Git/CI)",
-          softSkills: "Soft Skills"
+          frontend: "Frontend (React/Next/Angular)",
+          mobile: "Mobile (Flutter/RN/Ionic)",
+          backend: "Backend (NestJS/Node/SQL)",
+          tools: "Cloud & DevOps (AWS/Docker/Git)",
+          softSkills: "Soft Skills & Scrum"
         },
         defaultContactMsg: "Hi Julián, I visited your portfolio and saw that we have a hiring compatibility of {{score}}% for our developer position ({{mode}}) requiring skills in: {{skills}}. Would you be interested in talking?"
       },
@@ -498,7 +498,7 @@ const resources = {
         scoreTitle: "Resultado de Compatibilidad",
         feedbackExcellent: "¡Match Excelente! Julián cuenta con las tecnologías y condiciones de trabajo ideales para tu vacante. Está listo para aportar valor desde el día uno.",
         feedbackStrong: "Match Fuerte. Cumple con la mayoría de tus requisitos y tiene gran flexibilidad para adaptarse al rol rápidamente.",
-        feedbackModerate: "Match Moderado. Aunque su stack principal varía, su sólida base en Javascript, C# y desarrollo móvil le permite realizar una transición succesiva.",
+        feedbackModerate: "Match Moderado. Su sólida base de más de 6 años en React, Next.js, Angular, Flutter y NestJS le permite realizar una transición exitosa.",
         chartTitle: "📊 Gráfico de Cobertura de Habilidades",
         julianCapacity: "Julián Correa (Capacidad)",
         yourRequirement: "Tu Requisito de Empleo",
@@ -510,11 +510,11 @@ const resources = {
         copiedBtn: "✓ Mensaje Copiado",
         fastChannels: "Canales rápidos:",
         radarLabels: {
-          frontend: "Frontend (React/Vite)",
-          mobile: "Mobile (Flutter/Ionic)",
-          backend: "Backend (.NET/PHP)",
-          tools: "Herramientas (Git/CI)",
-          softSkills: "Habilidades Blandas"
+          frontend: "Frontend (React/Next/Angular)",
+          mobile: "Mobile (Flutter/RN/Ionic)",
+          backend: "Backend (NestJS/Node/SQL)",
+          tools: "Cloud & DevOps (AWS/Docker/Git)",
+          softSkills: "Habilidades Blandas & Scrum"
         },
         defaultContactMsg: "Hola Julián, visité tu portafolio y vi que tenemos una compatibilidad de contratación del {{score}}% para nuestra posición de desarrollo ({{mode}}) requiriendo habilidades en: {{skills}}. ¿Te interesaría conversar?"
       },
