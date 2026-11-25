@@ -1,6 +1,276 @@
+import { useEffect, useRef, useState } from "react";
 import { FlipWords } from "./FlipWords";
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+
+const SpaceshipHeadline = ({ text, isMobile = false }) => {
+  const containerRef = useRef(null);
+  const pathRef = useRef(null);
+  const trailRef = useRef(null);
+  const shipRef = useRef(null);
+  const topGlowRef = useRef(null);
+  const bottomGlowRef = useRef(null);
+  const startTimeRef = useRef(null);
+
+  const [dims, setDims] = useState({ w: isMobile ? 270 : 470, h: isMobile ? 76 : 124 });
+  const base = import.meta.env.BASE_URL;
+
+  // Split into 2 horizontal lines: e.g. "Desarrollador de" / "Software"
+  const words = (text || "").trim().split(/\s+/);
+  const topLine =
+    words.length > 1 ? words.slice(0, -1).join(" ") : words[0] || "";
+  const bottomLine = words.length > 1 ? words[words.length - 1] : "";
+
+  // Measure actual rendered headline dimensions for responsive path accuracy
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const updateSize = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setDims({ w: rect.width, h: rect.height });
+      }
+    };
+
+    updateSize();
+    const ro = new ResizeObserver(updateSize);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [text, isMobile]);
+
+  // Build 2-line continuous S-turn trajectory:
+  // Line 1 (Left -> Right to "de") -> smooth downward bank after "de" -> Line 2 (Right -> Left across "Software")
+  const y1 = Math.round(dims.h * 0.27);
+  const y2 = bottomLine ? Math.round(dims.h * 0.77) : y1;
+  const startX = isMobile ? -34 : -50;
+  const endX = isMobile ? -42 : -62;
+  const turnX = Math.round(dims.w + (isMobile ? 6 : 12));
+  const turnBulge = isMobile ? 34 : 52;
+
+  const flightPath = bottomLine
+    ? `M ${startX} ${y1} L ${turnX} ${y1} C ${turnX + turnBulge} ${y1}, ${
+        turnX + turnBulge
+      } ${y2}, ${turnX} ${y2} L ${endX} ${y2}`
+    : `M ${startX} ${y1} L ${turnX + 40} ${y1}`;
+
+  // 60/120fps zero-rerender animation loop driving ship, curved contrail, and letter illumination
+  useEffect(() => {
+    let rafId;
+    const flightMs = 7800; // Slower, smooth cruise across both lines
+    const pauseMs = 2600;
+    const cycleMs = flightMs + pauseMs;
+    const shipW = isMobile ? 44 : 68;
+    const shipH = isMobile ? 17 : 26;
+    const nozzleBackPx = isMobile ? 11 : 17;
+    const trailMaxFrac = 0.13;
+
+    const tick = (now) => {
+      if (startTimeRef.current === null) startTimeRef.current = now;
+      const elapsed = (now - startTimeRef.current) % cycleMs;
+
+      const pathEl = pathRef.current;
+      const shipEl = shipRef.current;
+      const trailEl = trailRef.current;
+      const topGlowEl = topGlowRef.current;
+      const bottomGlowEl = bottomGlowRef.current;
+
+      if (pathEl && shipEl && trailEl) {
+        const totalLen = pathEl.getTotalLength();
+
+        if (elapsed <= flightMs && totalLen > 0) {
+          const u = elapsed / flightMs;
+          // Gentle cosine blend for natural acceleration/deceleration without rushing
+          const p = 0.82 * u + 0.18 * (0.5 - 0.5 * Math.cos(Math.PI * u));
+          const dist = p * totalLen;
+
+          const pt = pathEl.getPointAtLength(dist);
+          const pBefore = pathEl.getPointAtLength(Math.max(0, dist - 2.5));
+          const pAfter = pathEl.getPointAtLength(Math.min(totalLen, dist + 2.5));
+
+          const angleRad = Math.atan2(pAfter.y - pBefore.y, pAfter.x - pBefore.x);
+          const angleDeg = (angleRad * 180) / Math.PI;
+
+          // Smooth aileron roll during the downward bank at "de" so the cockpit stays upright on Line 2
+          const cosA = Math.cos(angleRad);
+          const scaleY =
+            cosA >= 0
+              ? Math.max(0.45, cosA)
+              : -Math.max(0.45, Math.abs(cosA));
+
+          // Smooth entry & exit fade
+          let opacity = 1;
+          if (u < 0.07) opacity = u / 0.07;
+          else if (u > 0.92) opacity = (1 - u) / 0.08;
+
+          shipEl.style.opacity = String(opacity);
+          shipEl.style.transform = `translate3d(${pt.x - shipW / 2}px, ${
+            pt.y - shipH / 2
+          }px, 0) rotate(${angleDeg}deg) scaleY(${scaleY})`;
+
+          // Curved SVG contrail hugging the rear nozzles along the path
+          const pNozzle = Math.max(0, (dist - nozzleBackPx) / totalLen);
+          const sStart = Math.max(0, pNozzle - trailMaxFrac);
+          const visLen = Math.max(0, pNozzle - sStart);
+          trailEl.style.opacity = String(opacity * 0.9);
+          trailEl.setAttribute("stroke-dasharray", `${visLen} 2`);
+          trailEl.setAttribute("stroke-dashoffset", `${-sStart}`);
+
+          // Real-time localized thruster light cast onto whichever line the ship is crossing
+          const midY = (y1 + y2) / 2;
+          const glowRadius = isMobile ? 65 : 105;
+
+          if (topGlowEl) {
+            if (pt.y <= midY + 10) {
+              topGlowEl.style.opacity = String(opacity);
+              topGlowEl.style.backgroundImage = `radial-gradient(${glowRadius}px circle at ${pt.x}px 55%, rgba(255,122,61,0.95) 0%, rgba(124,232,255,0.8) 45%, rgba(255,255,255,0) 100%)`;
+            } else {
+              topGlowEl.style.opacity = "0";
+            }
+          }
+
+          if (bottomGlowEl) {
+            if (pt.y >= midY - 10) {
+              bottomGlowEl.style.opacity = String(opacity);
+              bottomGlowEl.style.backgroundImage = `radial-gradient(${glowRadius}px circle at ${pt.x}px 50%, rgba(255,122,61,0.95) 0%, rgba(124,232,255,0.8) 45%, rgba(255,255,255,0) 100%)`;
+            } else {
+              bottomGlowEl.style.opacity = "0";
+            }
+          }
+        } else {
+          // Rest phase between passes
+          shipEl.style.opacity = "0";
+          trailEl.style.opacity = "0";
+          if (topGlowEl) topGlowEl.style.opacity = "0";
+          if (bottomGlowEl) bottomGlowEl.style.opacity = "0";
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [flightPath, isMobile, y1, y2]);
+
+  const handleReplay = () => {
+    startTimeRef.current = performance.now();
+  };
+
+  return (
+    <span
+      ref={containerRef}
+      onClick={handleReplay}
+      title="Click para lanzar nave"
+      className={`relative inline-flex flex-col ${
+        isMobile ? "items-center" : "items-start"
+      } cursor-pointer select-none overflow-visible py-0.5`}
+    >
+      {/* Line 1: "Desarrollador de" / "Software" */}
+      <span
+        className={`relative z-10 block font-bold tracking-[-0.03em] text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] ${
+          isMobile ? "text-3xl" : "text-5xl lg:text-[3.65rem]"
+        }`}
+      >
+        <span className="relative inline-block">
+          {topLine}
+          <span
+            ref={topGlowRef}
+            aria-hidden="true"
+            style={{
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+              opacity: 0,
+            }}
+            className="pointer-events-none absolute inset-0 select-none transition-opacity duration-75"
+          >
+            {topLine}
+          </span>
+        </span>
+      </span>
+
+      {/* Line 2: "Software" / "Developer" */}
+      {bottomLine && (
+        <span
+          className={`relative z-10 block font-bold tracking-[-0.03em] text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)] ${
+            isMobile ? "text-3xl" : "text-5xl lg:text-[3.65rem]"
+          }`}
+        >
+          <span className="relative inline-block">
+            {bottomLine}
+            <span
+              ref={bottomGlowRef}
+              aria-hidden="true"
+              style={{
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+                opacity: 0,
+              }}
+              className="pointer-events-none absolute inset-0 select-none transition-opacity duration-75"
+            >
+              {bottomLine}
+            </span>
+          </span>
+        </span>
+      )}
+
+      {/* Curved SVG Trajectory & Glowing Ion Contrail Layer */}
+      <svg
+        aria-hidden="true"
+        width={dims.w}
+        height={dims.h}
+        viewBox={`0 0 ${dims.w} ${dims.h}`}
+        className="pointer-events-none absolute inset-0 z-20 overflow-visible"
+      >
+        <defs>
+          <linearGradient id="shipTrailGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ff7a3d" stopOpacity="0.15" />
+            <stop offset="50%" stopColor="#ff7a3d" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#7ce8ff" stopOpacity="0.95" />
+          </linearGradient>
+        </defs>
+
+        {/* Hidden geometry guide path */}
+        <path ref={pathRef} d={flightPath} fill="none" stroke="none" />
+
+        {/* Visible curved plasma contrail following the ship around "de" */}
+        <path
+          ref={trailRef}
+          d={flightPath}
+          pathLength={1}
+          fill="none"
+          stroke="url(#shipTrailGrad)"
+          strokeWidth={isMobile ? 2 : 2.6}
+          strokeLinecap="round"
+          style={{
+            opacity: 0,
+            filter: "drop-shadow(0 0 8px rgba(255,122,61,0.8))",
+          }}
+        />
+      </svg>
+
+      {/* Starfighter Layer Following the 2-Line Curved Trajectory */}
+      <div
+        ref={shipRef}
+        aria-hidden="true"
+        style={{
+          opacity: 0,
+          width: isMobile ? "44px" : "68px",
+          height: isMobile ? "17px" : "26px",
+        }}
+        className="pointer-events-none absolute top-0 left-0 z-30 will-change-transform"
+      >
+        <img
+          src={`${base}assets/spaceship.svg`}
+          alt=""
+          className="w-full h-full object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] drop-shadow-[0_0_12px_rgba(255,122,61,0.45)]"
+        />
+      </div>
+    </span>
+  );
+};
 
 const HeroText = () => {
   const { t, i18n } = useTranslation();
@@ -56,12 +326,9 @@ const HeroText = () => {
           </span>
         </motion.div>
 
-        {/* Primary Role Headline */}
-        <motion.h1
-          variants={itemVariants}
-          className="text-5xl lg:text-[3.65rem] font-bold tracking-[-0.03em] text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.65)]"
-        >
-          {t("hero.titleCraftingPart1")}
+        {/* Primary Role Headline with 2-Line Curved Starfighter Trajectory */}
+        <motion.h1 variants={itemVariants}>
+          <SpaceshipHeadline text={t("hero.titleCraftingPart1")} />
         </motion.h1>
 
         {/* Editorial Sentence Flow */}
@@ -168,11 +435,8 @@ const HeroText = () => {
           </span>
         </motion.div>
 
-        <motion.h1
-          variants={itemVariants}
-          className="text-3xl font-bold tracking-[-0.025em] text-white"
-        >
-          {t("hero.titleCraftingPart1")}
+        <motion.h1 variants={itemVariants}>
+          <SpaceshipHeadline text={t("hero.titleCraftingPart1")} isMobile />
         </motion.h1>
 
         {isSpanish ? (
