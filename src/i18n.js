@@ -256,7 +256,7 @@ const resources = {
         thinking: "Thinking..."
       },
       certifications: {
-        title: "Certifications & Credentials",
+        title: "Certifications & Courses",
         subtitle: "Official credentials and academic achievements demonstrating my technical expertise.",
         verifyBtn: "Verify Credential",
         underConstruction: "Under Construction"
@@ -548,7 +548,7 @@ const resources = {
         thinking: "Pensando..."
       },
       certifications: {
-        title: "Certificaciones y Títulos",
+        title: "Certificados y Cursos",
         subtitle: "Títulos académicos y certificaciones oficiales que respaldan mi experiencia técnica.",
         verifyBtn: "Verificar Credencial",
         underConstruction: "En construcción"
